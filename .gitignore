@@ -6,3 +6,4 @@
 *.ear
 .idea
 elasticsearch-river-csv.iml
+target
