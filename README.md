@@ -3,12 +3,15 @@ CSV River Plugin for ElasticSearch
 
 The CSV River plugin allows index CSV files in folder.
 
-In order to install the plugin, simply run: `bin/plugin -install xxBedy/elasticsearch-river-csv/1.0.0`.
+In order to install the plugin, simply run: `bin/plugin -install xxBedy/elasticsearch-river-csv/1.0.1`.
+If it doesn't work, clone git repository and build plugin manually.
 
     -------------------------------------
     | CSV Plugin | ElasticSearch        |
     -------------------------------------
     | master         | 0.19.x -> master |
+    -------------------------------------
+    | 1.0.1          | 0.19.x           |
     -------------------------------------
     | 1.0.0          | 0.19.x           |
     -------------------------------------
@@ -38,8 +41,24 @@ Creating the CSV river can be done using:
 	        "index" : "my_csv_data",
 	        "type" : "csv_row",
 	        "bulk_size" : 10000,
+	        "bulk_threshold" : 50
 	    }
 	}'
+
+    Optional parameters:
+    ----------------------------------------
+    | Name              | Default value    |
+    ----------------------------------------
+    | field_separator   | ,                |
+    ----------------------------------------
+    | escape_character  | \                |
+    ----------------------------------------
+    | quote_character   | "                |
+    ----------------------------------------
+    | bulk_size         | 100              |
+    ----------------------------------------
+    | bulk_threshold    | 10               |
+    ----------------------------------------
 
 
 License
