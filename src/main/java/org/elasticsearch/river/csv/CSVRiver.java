@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -64,6 +65,8 @@ public class CSVRiver extends AbstractRiverComponent implements River {
     private char escapeCharacter;
     private char quoteCharacter;
     private char separator;
+    private AtomicInteger onGoingBulks = new AtomicInteger();
+    private int bulkThreshold;
 
     @SuppressWarnings({"unchecked"})
     @Inject
@@ -89,11 +92,13 @@ public class CSVRiver extends AbstractRiverComponent implements River {
             Map<String, Object> indexSettings = (Map<String, Object>) settings.settings().get("index");
             indexName = XContentMapValues.nodeStringValue(indexSettings.get("index"), riverName.name());
             typeName = XContentMapValues.nodeStringValue(indexSettings.get("type"), "csv_type");
-            this.bulkSize = XContentMapValues.nodeIntegerValue(indexSettings.get("bulk_size"), 100);
+            bulkSize = XContentMapValues.nodeIntegerValue(indexSettings.get("bulk_size"), 100);
+            bulkThreshold = XContentMapValues.nodeIntegerValue(indexSettings.get("bulk_threshold"), 10);
         } else {
             indexName = riverName.name();
             typeName = "csv_type";
             bulkSize = 100;
+            bulkThreshold = 10;
         }
 
     }
@@ -124,28 +129,51 @@ public class CSVRiver extends AbstractRiverComponent implements River {
         }
     }
 
+
     private void processBulkIfNeeded() {
         if (currentRequest.numberOfActions() >= bulkSize) {
-            indexBulk();
+            // execute the bulk operation
+            int currentOnGoingBulks = onGoingBulks.incrementAndGet();
+            if (currentOnGoingBulks > bulkThreshold) {
+                onGoingBulks.decrementAndGet();
+                logger.warn("ongoing bulk, [{}] crossed threshold [{}], waiting", onGoingBulks, bulkThreshold);
+                try {
+                    synchronized (this) {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    logger.error("Error during wait", e);
+                }
+            }
+            {
+                try {
+                    currentRequest.execute(new ActionListener<BulkResponse>() {
+                        @Override
+                        public void onResponse(BulkResponse bulkResponse) {
+                            onGoingBulks.decrementAndGet();
+                            notifyCSVRiver();
+                        }
+
+                        @Override
+                        public void onFailure(Throwable e) {
+                            onGoingBulks.decrementAndGet();
+                            notifyCSVRiver();
+                            logger.warn("failed to execute bulk");
+                        }
+                    });
+                } catch (Exception e) {
+                    onGoingBulks.decrementAndGet();
+                    notifyCSVRiver();
+                    logger.warn("failed to process bulk", e);
+                }
+            }
             currentRequest = client.prepareBulk();
         }
     }
 
-    private void indexBulk() {
-        try {
-            currentRequest.execute(new ActionListener<BulkResponse>() {
-                @Override
-                public void onResponse(BulkResponse bulkResponse) {
-                    //NOOP
-                }
-
-                @Override
-                public void onFailure(Throwable e) {
-                    logger.warn("failed to execute bulk", e, (Object) null);
-                }
-            });
-        } catch (Exception e) {
-            logger.warn("failed to process bulk", e);
+    private void notifyCSVRiver() {
+        synchronized (CSVRiver.this) {
+            CSVRiver.this.notify();
         }
     }
 
@@ -166,7 +194,7 @@ public class CSVRiver extends AbstractRiverComponent implements River {
 
                         file = renameFile(file, ".imported");
                         lastProcessedFile = file;
-                        indexBulk();
+                        processBulkIfNeeded();
                     }
                     delay();
                 } catch (Exception e) {
