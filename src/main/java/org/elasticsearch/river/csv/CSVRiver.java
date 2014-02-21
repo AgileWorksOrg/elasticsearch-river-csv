@@ -81,9 +81,9 @@ public class CSVRiver extends AbstractRiverComponent implements River {
             filenamePattern = XContentMapValues.nodeStringValue(csvSettings.get("filename_pattern"), ".*\\.csv$");
             csvFields = XContentMapValues.extractRawValues("fields", csvSettings);
             poll = XContentMapValues.nodeTimeValue(csvSettings.get("poll"), TimeValue.timeValueMinutes(60));
-            escapeCharacter = XContentMapValues.nodeStringValue(csvSettings.get("escape_character"), String.valueOf(CSVReader.DEFAULT_ESCAPE_CHARACTER)).charAt(0);
-            separator = XContentMapValues.nodeStringValue(csvSettings.get("field_separator"), String.valueOf(CSVReader.DEFAULT_SEPARATOR)).charAt(0);
-            quoteCharacter = XContentMapValues.nodeStringValue(csvSettings.get("quote_character"), String.valueOf(CSVReader.DEFAULT_QUOTE_CHARACTER)).charAt(0);
+            escapeCharacter = XContentMapValues.nodeStringValue(csvSettings.get("escape_character"), String.valueOf("\\")).charAt(0);
+            separator = XContentMapValues.nodeStringValue(csvSettings.get("field_separator"), String.valueOf(",")).charAt(0);
+            quoteCharacter = XContentMapValues.nodeStringValue(csvSettings.get("quote_character"), String.valueOf("\"")).charAt(0);
         }
 
         logger.info("creating csv stream river for [{}] with pattern [{}]", folderName, filenamePattern);
@@ -130,8 +130,8 @@ public class CSVRiver extends AbstractRiverComponent implements River {
     }
 
 
-    private void processBulkIfNeeded() {
-        if (currentRequest.numberOfActions() >= bulkSize) {
+    private void processBulkIfNeeded(boolean force) {
+        if (currentRequest.numberOfActions() >= bulkSize || force) {
             // execute the bulk operation
             int currentOnGoingBulks = onGoingBulks.incrementAndGet();
             if (currentOnGoingBulks > bulkThreshold) {
@@ -185,6 +185,9 @@ public class CSVRiver extends AbstractRiverComponent implements River {
                 File lastProcessedFile = null;
                 try {
                     File files[] = getFiles();
+
+                    logger.info("Going to process files {}", files);
+
                     for (File file : files) {
                         logger.info("Processing file {}", file.getName());
                         file = renameFile(file, ".processing");
@@ -194,8 +197,10 @@ public class CSVRiver extends AbstractRiverComponent implements River {
 
                         file = renameFile(file, ".imported");
                         lastProcessedFile = file;
-                        processBulkIfNeeded();
+                        processBulkIfNeeded(false);
                     }
+                    processBulkIfNeeded(true);
+                    // FIXME
                     delay();
                 } catch (Exception e) {
                     if (lastProcessedFile != null) {
@@ -229,10 +234,14 @@ public class CSVRiver extends AbstractRiverComponent implements River {
         }
 
         private void processFile(File file) throws IOException {
+            long linesCount = 0;
             CSVReader reader = new CSVReader(new FileReader(file), separator, quoteCharacter, escapeCharacter);
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
                 if (nextLine.length > 0 && !(nextLine.length == 1 && nextLine[0].trim().equals(""))) {
+
+                    linesCount++;
+
                     XContentBuilder builder = XContentFactory.jsonBuilder();
                     builder.startObject();
 
@@ -243,8 +252,10 @@ public class CSVRiver extends AbstractRiverComponent implements River {
                     builder.endObject();
                     currentRequest.add(Requests.indexRequest(indexName).type(typeName).id(UUID.randomUUID().toString()).create(true).source(builder));
                 }
-                processBulkIfNeeded();
+                processBulkIfNeeded(false);
             }
+
+            logger.info("File {}, processed lines {} ", file.getName(), linesCount);
         }
     }
 }

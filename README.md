@@ -15,6 +15,8 @@ If it doesn't work, clone git repository and build plugin manually.
     -------------------------------------
     | 1.0.0          | 0.19.x           |
     -------------------------------------
+    | 2.0.0          | 1.0.0            |
+    -------------------------------------
 
 The CSV river import data from CSV files and index it.
 
@@ -25,7 +27,7 @@ Creating the CSV river can be done using:
 	    "type" : "csv",
 	    "csv_file" : {
 	        "folder" : "/tmp",
-	        "filename_mask" : ".*\\.csv$",
+	        "filename_pattern" : ".*\\.csv$",
 	        "poll":"5m",
 	        "fields" : [
 	            "column1",
@@ -66,7 +68,7 @@ License
 
     This software is licensed under the Apache 2 license, quoted below.
 
-    Copyright 2012-2013 Martin Bednar
+    Copyright 2012-2013 Martin Bednar, Vitek Tajich
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
