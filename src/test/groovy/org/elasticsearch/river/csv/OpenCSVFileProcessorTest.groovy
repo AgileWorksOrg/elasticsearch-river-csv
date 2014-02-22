@@ -40,7 +40,6 @@ class OpenCSVFileProcessorTest extends Specification {
         List<IndexRequest> requests = listener.requests
 
         requests.each { IndexRequest request ->
-            request.id()
             IndexRequest.OpType.INDEX == request.opType()
             configuration.indexName == request.index()
             configuration.typeName == request.type()
@@ -99,7 +98,6 @@ class OpenCSVFileProcessorTest extends Specification {
         List<IndexRequest> requests = listener.requests
 
         requests.each { IndexRequest request ->
-            request.id()
             IndexRequest.OpType.INDEX == request.opType()
             configuration.indexName == request.index()
             configuration.typeName == request.type()
@@ -132,8 +130,6 @@ class OpenCSVFileProcessorTest extends Specification {
             IndexRequest.OpType.INDEX == request.opType()
             configuration.indexName == request.index()
             configuration.typeName == request.type()
-
-            println request.source().toUtf8()
         }
 
         requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350","Description":"ac, abs, moon","Price":"3000.00"}'
@@ -161,12 +157,9 @@ class OpenCSVFileProcessorTest extends Specification {
         List<IndexRequest> requests = listener.requests
 
         requests.each { IndexRequest request ->
-            request.id()
             IndexRequest.OpType.INDEX == request.opType()
             configuration.indexName == request.index()
             configuration.typeName == request.type()
-
-            println request.source().toUtf8()
         }
 
         requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350","Length":"2.34"}'
