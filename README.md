@@ -26,13 +26,13 @@ The CSV river import data from CSV files and index it.
 ###Minimal curl
 
 	curl -XPUT localhost:9200/_river/my_csv_river/_meta -d '
-	{
-	    "type" : "csv",
-	    "csv_file" : {
-	        "folder" : "/tmp",
-	        "first_line_is_header": "true"
-	    }
-	}'
+    {
+        "type" : "csv",
+        "csv_file" : {
+            "folder" : "/tmp",
+            "first_line_is_header":"true"
+        }
+    }'
 
 ###Full request
 

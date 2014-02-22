@@ -65,7 +65,7 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
 
     public void processBulkIfNeeded(boolean force) {
 
-        if (currentRequest.numberOfActions() >= config.getBulkSize() || force) {
+        if (currentRequest.numberOfActions() >= config.getBulkSize() || (currentRequest.numberOfActions() > 0 && force)) {
             // execute the bulk operation
             int currentOnGoingBulks = config.getOnGoingBulks().incrementAndGet();
             if (currentOnGoingBulks > config.getBulkThreshold()) {

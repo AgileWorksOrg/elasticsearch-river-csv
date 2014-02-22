@@ -1,8 +1,5 @@
 package org.elasticsearch.river.csv
 
-/**
- * Created by vtajzich on 21/02/14.
- */
 class Constants {
 
     static final String CSV_FILE = 'csv_file'

@@ -29,6 +29,7 @@ class CSVConnector implements Runnable {
 
                 File[] files = getFiles()
 
+                listener.log('Using configuration: {}', config)
                 listener.log('Going to process files {}', files)
 
                 for (File file : files) {
