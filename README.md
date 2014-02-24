@@ -3,13 +3,15 @@ CSV River Plugin for ElasticSearch
 
 The CSV River plugin allows index CSV files in folder.
 
-In order to install the plugin, simply run: `bin/plugin -install xxBedy/elasticsearch-river-csv/1.0.1`.
+In order to install the plugin, simply run: `bin/plugin -install xxBedy/elasticsearch-river-csv/2.0.0`.
 If it doesn't work, clone git repository and build plugin manually.
 
     -------------------------------------
     | CSV Plugin | ElasticSearch        |
     -------------------------------------
-    | master         | 0.19.x -> master |
+    | master         | 1.0.x -> master |
+    -------------------------------------
+    | 2.0.0          | 1.0.0            |
     -------------------------------------
     | 1.0.1          | 0.19.x           |
     -------------------------------------
@@ -18,14 +20,38 @@ If it doesn't work, clone git repository and build plugin manually.
 
 The CSV river import data from CSV files and index it.
 
-Creating the CSV river can be done using:
+##Changelog
+
+###2.0.0
+
+* Updated to ES 1.0.0
+* Fixed - when input file was smaller than batch it didn't saved to ES
+* Added - id column name, documents with ID column can be updated
+* Added - ability to parse first row as header, must be enabled by property
+
+
+##Creating the CSV river can be done using:
+
+
+###Minimal curl
 
 	curl -XPUT localhost:9200/_river/my_csv_river/_meta -d '
+    {
+        "type" : "csv",
+        "csv_file" : {
+            "folder" : "/tmp",
+            "first_line_is_header":"true"
+        }
+    }'
+
+###Full request
+
+    curl -XPUT localhost:9200/_river/my_csv_river/_meta -d '
 	{
 	    "type" : "csv",
 	    "csv_file" : {
 	        "folder" : "/tmp",
-	        "filename_mask" : ".*\\.csv$",
+	        "filename_pattern" : ".*\\.csv$",
 	        "poll":"5m",
 	        "fields" : [
 	            "column1",
@@ -33,21 +59,31 @@ Creating the CSV river can be done using:
 	            "column3",
 	            "column4"
 	        ],
-   	        "field_separator" : ",",
-   	        "escape_character" : ";",
-   	        "quote_character" : "'"
+	        "field_separator" : ",",
+	        "escape_character" : ";",
+	        "quote_character" : "'"
 	    },
 	    "index" : {
 	        "index" : "my_csv_data",
-	        "type" : "csv_row",
-	        "bulk_size" : 10000,
-	        "bulk_threshold" : 50
+	        "type" : "csv_type",
+	        "bulk_size" : 100,
+	        "bulk_threshold" : 10
 	    }
 	}'
 
-    Optional parameters:
+
+###Optional parameters:
+
+fields = empty - MUST BE SET or first_line_is_header must be set to true
+
     ----------------------------------------
     | Name              | Default value    |
+    ----------------------------------------
+    | first_line_is_header   | false       |
+    ----------------------------------------
+    | filename_pattern   | .*\\.csv$       |
+    ----------------------------------------
+    | poll              |   60 minutes     |
     ----------------------------------------
     | field_separator   | ,                |
     ----------------------------------------
@@ -66,7 +102,7 @@ License
 
     This software is licensed under the Apache 2 license, quoted below.
 
-    Copyright 2012-2013 Martin Bednar
+    Copyright 2012-2013 Martin Bednar, Vitek Tajzich
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
