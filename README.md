@@ -20,6 +20,16 @@ If it doesn't work, clone git repository and build plugin manually.
 
 The CSV river import data from CSV files and index it.
 
+##Changelog
+
+###2.0.0
+
+* Updated to ES 1.0.0
+* Fixed - when input file was smaller than batch it didn't saved to ES
+* Added - id column name, documents with ID column can be updated
+* Added - ability to parse first row as header, must be enabled by property
+
+
 ##Creating the CSV river can be done using:
 
 

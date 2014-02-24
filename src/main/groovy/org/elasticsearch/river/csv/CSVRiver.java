@@ -125,7 +125,7 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
     @Override
     public void onLineProcessed(IndexRequest request) {
 
-        logger.info("Adding request {}", request);
+        logger.debug("Adding request {}", request);
 
         currentRequest.add(request);
         processBulkIfNeeded(false);
