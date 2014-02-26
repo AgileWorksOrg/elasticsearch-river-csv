@@ -59,9 +59,11 @@ The CSV river import data from CSV files and index it.
 	            "column3",
 	            "column4"
 	        ],
+            "first_line_is_header" : "false",
 	        "field_separator" : ",",
 	        "escape_character" : ";",
-	        "quote_character" : "'"
+	        "quote_character" : "'",
+            "field_id" : "id"
 	    },
 	    "index" : {
 	        "index" : "my_csv_data",
