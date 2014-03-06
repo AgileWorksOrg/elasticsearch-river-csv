@@ -8,6 +8,7 @@ class Constants {
     static class CSV {
 
         static final String CSV_FILE_IS_HEADER = 'first_line_is_header'
+        static final String SKIP_X_LINES = 'ignore_first_lines'
         static final String FOLDER = 'folder'
 
         static final String FILENAME_PATTERN = 'filename_pattern'

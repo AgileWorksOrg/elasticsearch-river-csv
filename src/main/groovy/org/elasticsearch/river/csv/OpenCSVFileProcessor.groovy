@@ -20,6 +20,7 @@ class OpenCSVFileProcessor implements FileProcessor {
 
     void process() {
 
+        int linesOffset = (config.firstLineIsHeader) ? 1 : 0;
         long linesCount = 0
 
         CSVReader reader = new CSVReader(new FileReader(file), config.separator, config.quoteCharacter, config.escapeCharacter)
@@ -34,32 +35,37 @@ class OpenCSVFileProcessor implements FileProcessor {
 
             } else if (nextLine.length > 0 && !(nextLine.length == 1 && nextLine[0].trim().equals(''))) {
 
-                XContentBuilder builder = XContentFactory.jsonBuilder()
-                builder.startObject()
+                if (1 + linesCount > config.skipLines + linesOffset) {
 
-                int position = 0
-                for (Object fieldName : config.csvFields) {
+                    XContentBuilder builder = XContentFactory.jsonBuilder()
+                    builder.startObject()
 
-                    if(fieldName != config.idField) {
-                        builder.field((String) fieldName, nextLine[position])
+                    int position = 0
+                    for (Object fieldName : config.csvFields) {
+
+                        if(fieldName != config.idField) {
+                            builder.field((String) fieldName, nextLine[position])
+                        }
+
+                        position++
                     }
 
-                    position++
+                    builder.endObject()
+
+                    IndexRequest request = Requests.indexRequest(config.indexName).type(config.typeName)
+
+                    if (csvContainsIDColumn()) {
+                        request.id(getId(nextLine))
+                    } else {
+                        request.id(UUID.randomUUID().toString())
+                    }
+
+                    request.create(false).source(builder)
+
+                    listener.onLineProcessed(request)
+
                 }
 
-                builder.endObject()
-
-                IndexRequest request = Requests.indexRequest(config.indexName).type(config.typeName)
-
-                if (csvContainsIDColumn()) {
-                    request.id(getId(nextLine))
-                } else {
-                    request.id(UUID.randomUUID().toString())
-                }
-
-                request.create(false).source(builder)
-
-                listener.onLineProcessed(request)
             }
 
             linesCount++
