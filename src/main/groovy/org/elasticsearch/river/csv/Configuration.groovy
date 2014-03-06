@@ -19,6 +19,8 @@ class Configuration {
 
     boolean firstLineIsHeader = false
 
+    int skipLines = 0
+
     List<Object> csvFields
     TimeValue poll
 
@@ -41,6 +43,7 @@ class Configuration {
             Map<String, Object> csvSettings = (Map<String, Object>) settings.settings().get(CSV_FILE)
 
             firstLineIsHeader = nodeBooleanValue(csvSettings.get(CSV_FILE_IS_HEADER, false))
+            skipLines = nodeIntegerValue(csvSettings.get(SKIP_X_LINES, 0))
             folderName = nodeStringValue(csvSettings.get(FOLDER), null)
             filenamePattern = nodeStringValue(csvSettings.get(FILENAME_PATTERN), FILENAME_PATTERN_VALUE)
             csvFields = extractRawValues(FIELDS, csvSettings)
