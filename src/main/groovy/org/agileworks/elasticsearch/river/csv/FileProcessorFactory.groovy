@@ -1,4 +1,4 @@
-package org.elasticsearch.river.csv
+package org.agileworks.elasticsearch.river.csv
 
 /**
  * Created by vtajzich on 22/02/14.

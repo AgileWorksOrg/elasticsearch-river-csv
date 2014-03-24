@@ -16,33 +16,19 @@
  *   the License.
  */
 
-package org.elasticsearch.plugin.river.csv;
+package org.agileworks.elasticsearch.river.csv;
 
-import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.plugins.AbstractPlugin;
-import org.elasticsearch.river.RiversModule;
-import org.elasticsearch.river.csv.CSVRiverModule;
+import org.agileworks.elasticsearch.river.csv.CSVRiver;
+import org.elasticsearch.common.inject.AbstractModule;
+import org.elasticsearch.river.River;
 
 /**
  *
  */
-public class CSVRiverPlugin extends AbstractPlugin {
-
-    @Inject
-    public CSVRiverPlugin() {
-    }
+public class CSVRiverModule extends AbstractModule {
 
     @Override
-    public String name() {
-        return "river-csv";
-    }
-
-    @Override
-    public String description() {
-        return "River CSV Plugin";
-    }
-
-    public void onModule(RiversModule module) {
-        module.registerRiver("csv", CSVRiverModule.class);
+    protected void configure() {
+        bind(River.class).to(CSVRiver.class).asEagerSingleton();
     }
 }

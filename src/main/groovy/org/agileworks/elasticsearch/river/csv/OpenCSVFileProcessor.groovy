@@ -1,4 +1,4 @@
-package org.elasticsearch.river.csv
+package org.agileworks.elasticsearch.river.csv
 
 import au.com.bytecode.opencsv.CSVReader
 import org.elasticsearch.action.index.IndexRequest

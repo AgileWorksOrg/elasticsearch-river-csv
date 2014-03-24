@@ -1,4 +1,4 @@
-package org.elasticsearch.river.csv
+package org.agileworks.elasticsearch.river.csv
 
 /**
  * Purpose to have a factory in this small project is to provide possibility

@@ -1,5 +1,6 @@
-package org.elasticsearch.river.csv
+package org.agileworks.elasticsearch.river.csv
 
+import org.agileworks.elasticsearch.river.csv.FileProcessorListener
 import org.elasticsearch.action.index.IndexRequest
 
 /**
