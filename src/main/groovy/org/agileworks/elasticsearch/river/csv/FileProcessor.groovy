@@ -1,4 +1,4 @@
-package org.elasticsearch.river.csv
+package org.agileworks.elasticsearch.river.csv
 
 public interface FileProcessor {
 
