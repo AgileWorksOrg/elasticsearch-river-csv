@@ -37,7 +37,7 @@ class CSVConnector implements Runnable {
 
                 for (File file : files) {
 
-                    try{
+                    try {
 
                         listener.log('Processing file {}', file.getName())
 
@@ -49,7 +49,7 @@ class CSVConnector implements Runnable {
                         file = renameFile(file, '.imported')
                         lastProcessedFile = file
 
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         listener.onErrorAndContinue(e, "Error during processing file '$file.name'. Skipping it.")
                     }
                 }
@@ -87,7 +87,7 @@ class CSVConnector implements Runnable {
 
         File folder = new File(config.folderName)
 
-        def filter = ['accept': {File file, String s -> s.matches(config.filenamePattern)}] as FilenameFilter
+        def filter = ['accept': { File file, String s -> s.matches(config.filenamePattern) }] as FilenameFilter
 
         return folder.listFiles(filter)
     }

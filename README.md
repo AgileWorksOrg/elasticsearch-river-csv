@@ -26,6 +26,7 @@ The CSV river import data from CSV files and index it.
 
 * Replaced custom upload logic with BulkProcessor. Inspired from pullrequest by https://github.com/aritratony . Thanks!
 * Added error handling - if something went wrong during line or file processing it is logged, skipped and import continues
+* Added callback feature - custom shell scripts can be called on events: before import, before file processing start, after file is processed and after all files are processed
 
 ###2.0.0
 
@@ -68,7 +69,12 @@ The CSV river import data from CSV files and index it.
 	        "field_separator" : ",",
 	        "escape_character" : ";",
 	        "quote_character" : "'",
-            "field_id" : "id"
+            "field_id" : "id",
+            "concurrent_requests" : "1",
+            "script_before_all": "/path/to/before_all.sh",
+            "script_after_all": "/path/to/after_all.sh",
+            "script_before_file": "/path/to/before_file.sh",
+            "script_after_file": "/path/to/after_file.sh"
 	    },
 	    "index" : {
 	        "index" : "my_csv_data",
@@ -77,6 +83,33 @@ The CSV river import data from CSV files and index it.
 	        "bulk_threshold" : 10
 	    }
 	}'
+
+* takes no arguments
+
+	    "script_before_all": "/path/to/before_all.sh"
+    	"script_after_all": "/path/to/after_all.sh"
+
+* file path is argument
+
+        "script_before_file": "/path/to/before_file.sh",
+        "script_after_file": "/path/to/after_file.sh"
+
+####Examples how the files look like
+
+        #!/bin/sh
+        echo "greetings from shell before all"
+
+
+        #!/bin/bash
+        echo "greetings from shell before file $1"
+
+
+        #!/bin/bash
+        echo "greetings from shell after file $1"
+
+
+        #!/bin/bash
+        echo "greetings from shell after all"
 
 
 ###Optional parameters:

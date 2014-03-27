@@ -21,6 +21,8 @@ class OpenCSVFileProcessor implements FileProcessor {
 
     void process() {
 
+        listener.onBeforeFileProcess(file)
+
         long linesCount = 0
 
         CSVReader reader = new CSVReader(new FileReader(file), config.separator, config.quoteCharacter, config.escapeCharacter)
