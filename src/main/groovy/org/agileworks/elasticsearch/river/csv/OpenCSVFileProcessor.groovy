@@ -1,7 +1,7 @@
 package org.agileworks.elasticsearch.river.csv
 
 import au.com.bytecode.opencsv.CSVReader
-import groovy.transform.CompileStatic
+import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.client.Requests
 import org.elasticsearch.common.xcontent.XContentBuilder

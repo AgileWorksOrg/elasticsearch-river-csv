@@ -31,6 +31,11 @@ class Configuration {
     int concurrentRequests
     String idField
 
+    String scriptBeforeAll
+    String scriptAfterAll
+    String scriptBeforeFile
+    String scriptAfterFile
+
     Configuration(RiverSettings settings, String riverName) {
 
         if (settings.settings().containsKey(Constants.CSV_FILE)) {
@@ -47,6 +52,11 @@ class Configuration {
             quoteCharacter = nodeStringValue(csvSettings.get(Constants.CSV.QUOTE_CHARACTER), String.valueOf('\"')).charAt(0)
             idField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_ID), 'id')
             concurrentRequests = nodeIntegerValue(csvSettings.get(Constants.CSV.CONCURRENT_REQUESTS), 1)
+
+            scriptBeforeAll = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_BEFORE_ALL), null)
+            scriptAfterAll = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_AFTER_ALL), null)
+            scriptBeforeFile = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_BEFORE_FILE), null)
+            scriptAfterFile = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_AFTER_FILE), null)
 
         } else {
             throw new ConfigurationException("No csv_file configuration found. See read.me (https://github.com/xxBedy/elasticsearch-river-csv)")

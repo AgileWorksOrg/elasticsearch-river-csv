@@ -1,5 +1,6 @@
 package org.agileworks.elasticsearch.river.csv
 
+import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener
 import org.elasticsearch.river.RiverSettings
 import spock.lang.Specification
 

@@ -1,4 +1,4 @@
-package org.agileworks.elasticsearch.river.csv
+package org.agileworks.elasticsearch.river.csv.listener
 
 import org.elasticsearch.action.index.IndexRequest
 
@@ -9,6 +9,8 @@ import org.elasticsearch.action.index.IndexRequest
 public interface FileProcessorListener {
 
     void onBeforeProcessingStart()
+
+    void onBeforeFileProcess(File file)
 
     void onLineProcessed(IndexRequest request)
 

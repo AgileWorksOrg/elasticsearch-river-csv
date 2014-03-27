@@ -28,6 +28,11 @@ class Constants {
         static final String FIELD_ID = 'field_id'
 
         static final String CONCURRENT_REQUESTS = 'concurrent_requests'
+
+        static final String SCRIPT_BEFORE_ALL = 'script_before_all'
+        static final String SCRIPT_AFTER_ALL = 'script_after_all'
+        static final String SCRIPT_BEFORE_FILE = 'script_before_file'
+        static final String SCRIPT_AFTER_FILE = 'script_after_file'
     }
 
     static class Index {

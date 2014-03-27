@@ -1,6 +1,7 @@
 package org.agileworks.elasticsearch.river.csv
 
 import groovy.transform.CompileStatic
+import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener
 
 /**
  * Purpose to have a factory in this small project is to provide possibility
