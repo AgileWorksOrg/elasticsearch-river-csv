@@ -18,7 +18,6 @@
 
 package org.agileworks.elasticsearch.river.csv;
 
-import org.agileworks.elasticsearch.river.csv.CSVRiver;
 import org.elasticsearch.common.inject.AbstractModule;
 import org.elasticsearch.river.River;
 

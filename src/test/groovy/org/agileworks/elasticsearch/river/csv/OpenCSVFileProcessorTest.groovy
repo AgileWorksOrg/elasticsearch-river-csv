@@ -166,6 +166,34 @@ class OpenCSVFileProcessorTest extends Specification {
         requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar","Length":"2.38"}'
     }
 
+    def "process file w/ header and one line has wrong number of columns"() {
+
+        given:
+
+        configuration.firstLineIsHeader = true
+
+        processor = new OpenCSVFileProcessor(configuration, getTestCsv('test_1_wrong_columns_count.csv'), listener)
+
+        when:
+        processor.process()
+
+        then:
+
+        listener.fileProcessed
+        listener.requests.size() == 2
+
+        List<IndexRequest> requests = listener.requests
+
+        requests.each { IndexRequest request ->
+            IndexRequest.OpType.INDEX == request.opType()
+            configuration.indexName == request.index()
+            configuration.typeName == request.type()
+        }
+
+        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
+        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+    }
+
     File getTestCsv(String name) {
 
         URL url = getClass().getResource("/$name")

@@ -1,14 +1,14 @@
 package org.agileworks.elasticsearch.river.csv
 
+import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.river.RiverSettings
 
-import java.util.concurrent.atomic.AtomicInteger
-
 import static org.elasticsearch.common.xcontent.support.XContentMapValues.*
 
 @ToString
+@CompileStatic
 class Configuration {
 
     String folderName
@@ -27,8 +27,8 @@ class Configuration {
     char escapeCharacter
     char quoteCharacter
     char separator
-    AtomicInteger onGoingBulks = new AtomicInteger()
     int bulkThreshold
+    int concurrentRequests
     String idField
 
     Configuration(RiverSettings settings, String riverName) {
@@ -46,6 +46,7 @@ class Configuration {
             separator = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_SEPARATOR), String.valueOf(',')).charAt(0)
             quoteCharacter = nodeStringValue(csvSettings.get(Constants.CSV.QUOTE_CHARACTER), String.valueOf('\"')).charAt(0)
             idField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_ID), 'id')
+            concurrentRequests = nodeIntegerValue(csvSettings.get(Constants.CSV.CONCURRENT_REQUESTS), 1)
 
         } else {
             throw new ConfigurationException("No csv_file configuration found. See read.me (https://github.com/xxBedy/elasticsearch-river-csv)")
