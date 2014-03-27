@@ -1,6 +1,5 @@
 package org.agileworks.elasticsearch.river.csv
 
-import org.agileworks.elasticsearch.river.csv.FileProcessorListener
 import org.elasticsearch.action.index.IndexRequest
 
 /**
@@ -21,7 +20,12 @@ class TestFileListener implements FileProcessorListener {
     }
 
     @Override
-    void onFileProcessed() {
+    void onBeforeProcessingStart() {
+
+    }
+
+    @Override
+    void onFileProcessed(File file) {
         fileProcessed = true
     }
 
@@ -43,5 +47,10 @@ class TestFileListener implements FileProcessorListener {
     @Override
     void log(String message, Object... args) {
         messages << message
+    }
+
+    @Override
+    void onErrorAndContinue(Exception e, String message) {
+
     }
 }

@@ -1,5 +1,8 @@
 package org.agileworks.elasticsearch.river.csv
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class Constants {
 
     static final String CSV_FILE = 'csv_file'
@@ -23,6 +26,8 @@ class Constants {
         static final String FIELD_SEPARATOR = 'field_separator'
         static final String QUOTE_CHARACTER = 'quote_character'
         static final String FIELD_ID = 'field_id'
+
+        static final String CONCURRENT_REQUESTS = 'concurrent_requests'
     }
 
     static class Index {

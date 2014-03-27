@@ -8,13 +8,17 @@ import org.elasticsearch.action.index.IndexRequest
  */
 public interface FileProcessorListener {
 
+    void onBeforeProcessingStart()
+
     void onLineProcessed(IndexRequest request)
 
-    void onFileProcessed()
+    void onFileProcessed(File file)
 
     void onAllFileProcessed()
 
     void onError(Exception e)
+
+    void onErrorAndContinue(Exception e, String message)
 
     boolean listening()
 

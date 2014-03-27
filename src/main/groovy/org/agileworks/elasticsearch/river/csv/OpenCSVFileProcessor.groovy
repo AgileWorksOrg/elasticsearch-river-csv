@@ -1,6 +1,7 @@
 package org.agileworks.elasticsearch.river.csv
 
 import au.com.bytecode.opencsv.CSVReader
+import groovy.transform.CompileStatic
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.client.Requests
 import org.elasticsearch.common.xcontent.XContentBuilder
@@ -34,40 +35,49 @@ class OpenCSVFileProcessor implements FileProcessor {
 
             } else if (nextLine.length > 0 && !(nextLine.length == 1 && nextLine[0].trim().equals(''))) {
 
-                XContentBuilder builder = XContentFactory.jsonBuilder()
-                builder.startObject()
-
-                int position = 0
-                for (Object fieldName : config.csvFields) {
-
-                    if(fieldName != config.idField) {
-                        builder.field((String) fieldName, nextLine[position])
-                    }
-
-                    position++
+                try {
+                    processDataLine(nextLine)
+                } catch (Exception e) {
+                    listener.onErrorAndContinue(e, "Error has occured during processing file '$file.name' , skipping line: '${nextLine}' and continue in processing")
                 }
-
-                builder.endObject()
-
-                IndexRequest request = Requests.indexRequest(config.indexName).type(config.typeName)
-
-                if (csvContainsIDColumn()) {
-                    request.id(getId(nextLine))
-                } else {
-                    request.id(UUID.randomUUID().toString())
-                }
-
-                request.create(false).source(builder)
-
-                listener.onLineProcessed(request)
             }
 
             linesCount++
         }
 
-        listener.onFileProcessed()
+        listener.onFileProcessed(file)
 
         listener.log("File ${file.getName()}, processed lines $linesCount")
+    }
+
+    private void processDataLine(String[] line) {
+
+        XContentBuilder builder = XContentFactory.jsonBuilder()
+        builder.startObject()
+
+        int position = 0
+        for (Object fieldName : config.csvFields) {
+
+            if (fieldName != config.idField) {
+                builder.field((String) fieldName, line[position])
+            }
+
+            position++
+        }
+
+        builder.endObject()
+
+        IndexRequest request = Requests.indexRequest(config.indexName).type(config.typeName)
+
+        if (csvContainsIDColumn()) {
+            request.id(getId(line))
+        } else {
+            request.id(UUID.randomUUID().toString())
+        }
+
+        request.create(false).source(builder)
+
+        listener.onLineProcessed(request)
     }
 
     boolean csvContainsIDColumn() {

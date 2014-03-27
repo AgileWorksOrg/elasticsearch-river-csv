@@ -32,17 +32,25 @@ class CSVConnector implements Runnable {
                 listener.log('Using configuration: {}', config)
                 listener.log('Going to process files {}', files)
 
+                listener.onBeforeProcessingStart()
+
                 for (File file : files) {
 
-                    listener.log('Processing file {}', file.getName())
+                    try{
 
-                    file = renameFile(file, '.processing')
-                    lastProcessedFile = file
+                        listener.log('Processing file {}', file.getName())
 
-                    processorFactory.create(config, file, listener).process()
+                        file = renameFile(file, '.processing')
+                        lastProcessedFile = file
 
-                    file = renameFile(file, '.imported')
-                    lastProcessedFile = file
+                        processorFactory.create(config, file, listener).process()
+
+                        file = renameFile(file, '.imported')
+                        lastProcessedFile = file
+
+                    }catch (Exception e) {
+                        listener.onErrorAndContinue(e, "Error during processing file '$file.name'. Skipping it.")
+                    }
                 }
 
                 listener.onAllFileProcessed()

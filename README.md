@@ -22,6 +22,11 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
+###2.0.1-SNAPSHOT
+
+* Replaced custom upload logic with BulkProcessor. Inspired from pullrequest by https://github.com/aritratony . Thanks!
+* Added error handling - if something went wrong during line or file processing it is logged, skipped and import continues
+
 ###2.0.0
 
 * Updated to ES 1.0.0
@@ -94,6 +99,8 @@ fields = empty - MUST BE SET or first_line_is_header must be set to true
     | bulk_size         | 100              |
     ----------------------------------------
     | bulk_threshold    | 10               |
+    ----------------------------------------
+    | concurrent_requests | 1              |
     ----------------------------------------
 
 
