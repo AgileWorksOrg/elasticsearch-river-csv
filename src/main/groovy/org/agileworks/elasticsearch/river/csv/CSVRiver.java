@@ -1,5 +1,8 @@
 package org.agileworks.elasticsearch.river.csv;
 
+import org.agileworks.elasticsearch.river.csv.listener.BashFileProcessorListener;
+import org.agileworks.elasticsearch.river.csv.listener.DelegatingFileProcessorListener;
+import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -24,13 +27,17 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
     private Configuration config;
     private BulkProcessor bulkProcessor;
 
+    DelegatingFileProcessorListener listener;
+
     @SuppressWarnings({"unchecked"})
     @Inject
-    public CSVRiver(RiverName riverName, RiverSettings settings, Client client, ThreadPool threadPool) {
+    public CSVRiver(RiverName riverName, RiverSettings settings, Client client) {
         super(riverName, settings);
         this.client = client;
 
         config = new Configuration(settings, riverName.name());
+
+        listener = new DelegatingFileProcessorListener(this, new BashFileProcessorListener(logger, config));
     }
 
     @Override
@@ -38,7 +45,7 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
 
         logger.info("starting csv stream");
 
-        thread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "CSV processor").newThread(new CSVConnector(this, config, factory));
+        thread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "CSV processor").newThread(new CSVConnector(listener, config, factory));
         thread.start();
     }
 
@@ -120,5 +127,10 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
     @Override
     public boolean listening() {
         return !closed;
+    }
+
+    @Override
+    public void onBeforeFileProcess(File file) {
+
     }
 }
