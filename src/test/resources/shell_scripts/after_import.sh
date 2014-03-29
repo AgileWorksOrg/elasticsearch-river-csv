@@ -1,2 +1,2 @@
 #!/bin/bash
-echo after all
+echo "after all"

@@ -1,2 +1,2 @@
 #!/bin/bash
-echo after file $1
+echo "after file $1"

@@ -1,2 +1,2 @@
 #!/bin/sh
-echo before all
+echo "before all"

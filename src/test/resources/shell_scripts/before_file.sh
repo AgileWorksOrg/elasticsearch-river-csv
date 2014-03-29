@@ -1,2 +1,2 @@
 #!/bin/bash
-echo before file $1
+echo "before file $1"
