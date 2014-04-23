@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <name>elasticsearch-river-csv</name>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.elasticsearch</groupId>
+    <groupId>org.agileworks</groupId>
     <artifactId>elasticsearch-river-csv</artifactId>
     <version>2.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>CSV River for ElasticSearch</description>
     <inceptionYear>2014</inceptionYear>
     <organization>
-        <name>Martin Bednar</name>
-        <url>http://github.com/xxBedy/elasticsearch-river-csv</url>
+        <name>AgileWorks</name>
+        <url>http://github.com/AgileWorksOrg/elasticsearch-river-csv</url>
     </organization>
     <licenses>
         <license>
@@ -22,9 +22,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:xxBedy/elasticsearch-river-csv.git</connection>
-        <developerConnection>scm:git:git@github.com:xxBedy/elasticsearch-river-csv.git</developerConnection>
-        <url>http://github.com/xxBedy/elasticsearch-river-csv</url>
+        <connection>scm:git:git@github.com:AgileWorksOrg/elasticsearch-river-csv.git</connection>
+        <developerConnection>scm:git:git@github.com:AgileWorksOrg/elasticsearch-river-csv.git</developerConnection>
+        <url>http://github.com/AgileWorksOrg/elasticsearch-river-csv</url>
     </scm>
 
     <parent>
