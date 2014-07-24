@@ -29,6 +29,14 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
+###2.1.0
+
+* Works with ElasticSearch 1.2.x - 1.3.x
+
+###2.0.2
+
+* Minor enhancements
+
 ###2.0.1
 
 * Replaced custom upload logic with BulkProcessor. Inspired from pullrequest by https://github.com/aritratony . Thanks!
@@ -132,7 +140,7 @@ fields = empty - MUST BE SET or first_line_is_header must be set to true
     ----------------------------------------
     | poll              |   60 minutes     |
     ----------------------------------------
-    | field_separator   | ,                |
+    | field_separator   | ,   (for tab separator use ```\t```     |
     ----------------------------------------
     | escape_character  | \                |
     ----------------------------------------
