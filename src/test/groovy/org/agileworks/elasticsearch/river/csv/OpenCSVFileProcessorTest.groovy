@@ -107,6 +107,34 @@ class OpenCSVFileProcessorTest extends Specification {
         requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
     }
 
+    def "process file w/o header and tab separator"() {
+
+        given:
+
+        configuration.csvFields = ['Year', 'Make', 'Model']
+        configuration.separator = '\t'
+        processor = new OpenCSVFileProcessor(configuration, getTestCsv('test_1_tab_separator.csv'), listener)
+
+        when:
+        processor.process()
+
+        then:
+
+        listener.fileProcessed
+        listener.requests.size() == 2
+
+        List<IndexRequest> requests = listener.requests
+
+        requests.each { IndexRequest request ->
+            IndexRequest.OpType.INDEX == request.opType()
+            configuration.indexName == request.index()
+            configuration.typeName == request.type()
+        }
+
+        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
+        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+    }
+
     def "process quoted file w/ header"() {
 
         given:
