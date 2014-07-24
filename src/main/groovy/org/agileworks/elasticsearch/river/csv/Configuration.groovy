@@ -59,7 +59,7 @@ class Configuration {
             scriptAfterFile = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_AFTER_FILE), null)
 
         } else {
-            throw new ConfigurationException("No csv_file configuration found. See read.me (https://github.com/xxBedy/elasticsearch-river-csv)")
+            throw new ConfigurationException("""No csv_file configuration found. See read.me (https://github.com/xxBedy/elasticsearch-river-csv). Did you rename "csv_file" to something custom? """)
         }
 
         if (settings.settings().containsKey(Constants.INDEX)) {
