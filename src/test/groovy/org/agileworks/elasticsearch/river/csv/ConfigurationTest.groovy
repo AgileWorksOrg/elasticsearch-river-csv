@@ -1,9 +1,9 @@
 package org.agileworks.elasticsearch.river.csv
 
-import org.agileworks.elasticsearch.river.csv.Configuration
-import org.agileworks.elasticsearch.river.csv.ConfigurationException
 import org.elasticsearch.river.RiverSettings
 import spock.lang.Specification
+
+import java.nio.charset.Charset
 
 class ConfigurationTest extends Specification {
 
@@ -30,6 +30,34 @@ class ConfigurationTest extends Specification {
         then:
 
         thrown(ConfigurationException)
+    }
+
+    void 'wrong charset'() {
+
+        given:
+
+        riverSettings = new RiverSettings(null, ['csv_file': ['charset':'NON_EXISTING']])
+
+        when:
+        config = new Configuration(riverSettings, riverName)
+
+        then:
+
+        thrown(ConfigurationException)
+    }
+
+    void 'correct charset'() {
+
+        given:
+
+        riverSettings = new RiverSettings(null, ['csv_file': ['charset':'UTF-16LE']])
+
+        when:
+        config = new Configuration(riverSettings, riverName)
+
+        then:
+
+        config.charset == Charset.forName('UTF-16LE')
     }
 
     void 'empty csv_file config'() {

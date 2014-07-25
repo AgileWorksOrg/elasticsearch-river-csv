@@ -29,6 +29,10 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
+###2.1.1-SNAPSHOT
+
+* added support for custom charset
+
 ###2.1.0
 
 * Works with ElasticSearch 1.2.x - 1.3.x
@@ -86,6 +90,7 @@ The CSV river import data from CSV files and index it.
 	        "quote_character" : "'",
             "field_id" : "id",
             "concurrent_requests" : "1",
+            "charset" : "UTF-8",
             "script_before_all": "/path/to/before_all.sh",
             "script_after_all": "/path/to/after_all.sh",
             "script_before_file": "/path/to/before_file.sh",
@@ -142,6 +147,8 @@ fields = empty - MUST BE SET or first_line_is_header must be set to true
     ----------------------------------------
     | field_separator   | ,   (for tab separator use ```\t```     |
     ----------------------------------------
+    | charset           | UTF-8            |
+    ----------------------------------------
     | escape_character  | \                |
     ----------------------------------------
     | quote_character   | "                |
@@ -152,6 +159,19 @@ fields = empty - MUST BE SET or first_line_is_header must be set to true
     ----------------------------------------
     | concurrent_requests | 1              |
     ----------------------------------------
+    
+####Charset
+ 
+Default charset is "UTF-8". If you need different, consider to use one of:
+ 
+* US-ASCII	Seven-bit ASCII, a.k.a. ISO646-US, a.k.a. the Basic Latin block of the Unicode character set
+* ISO-8859-1  	ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1
+* UTF-8	    Eight-bit UCS Transformation Format
+* UTF-16BE	Sixteen-bit UCS Transformation Format, big-endian byte order
+* UTF-16LE	Sixteen-bit UCS Transformation Format, little-endian byte order
+* UTF-16 	Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark
+ 
+ More details about charsets are available at http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html
 
 
 License

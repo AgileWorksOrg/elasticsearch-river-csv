@@ -27,6 +27,8 @@ class Constants {
         static final String QUOTE_CHARACTER = 'quote_character'
         static final String FIELD_ID = 'field_id'
 
+        static final String CHARSET = 'charset'
+
         static final String CONCURRENT_REQUESTS = 'concurrent_requests'
 
         static final String SCRIPT_BEFORE_ALL = 'script_before_all'

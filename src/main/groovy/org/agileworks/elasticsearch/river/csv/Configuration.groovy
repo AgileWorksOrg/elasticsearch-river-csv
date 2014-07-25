@@ -5,6 +5,8 @@ import groovy.transform.ToString
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.river.RiverSettings
 
+import java.nio.charset.Charset
+
 import static org.elasticsearch.common.xcontent.support.XContentMapValues.*
 
 @ToString
@@ -36,6 +38,8 @@ class Configuration {
     String scriptBeforeFile
     String scriptAfterFile
 
+    Charset charset = Charset.forName('UTF-8')
+
     Configuration(RiverSettings settings, String riverName) {
 
         if (settings.settings().containsKey(Constants.CSV_FILE)) {
@@ -52,6 +56,30 @@ class Configuration {
             quoteCharacter = nodeStringValue(csvSettings.get(Constants.CSV.QUOTE_CHARACTER), String.valueOf('\"')).charAt(0)
             idField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_ID), 'id')
             concurrentRequests = nodeIntegerValue(csvSettings.get(Constants.CSV.CONCURRENT_REQUESTS), 1)
+
+            String charsetName = nodeStringValue(csvSettings.get(Constants.CSV.CHARSET), 'UTF-8')
+
+            try {
+
+                charset = Charset.forName(charsetName)
+
+            } catch (Exception e) {
+                throw new ConfigurationException("""Charset name "$charsetName" is not valid.
+Consider to use one of:
+
+Charset     Description
+=====================================
+
+US-ASCII    Seven-bit ASCII, a.k.a. ISO646-US, a.k.a. the Basic Latin block of the Unicode character set
+ISO-8859-1  ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1
+UTF-8       Eight-bit UCS Transformation Format
+UTF-16BE    Sixteen-bit UCS Transformation Format, big-endian byte order
+UTF-16LE    Sixteen-bit UCS Transformation Format, little-endian byte order
+UTF-16      Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark
+
+More details about charsets are available at http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html
+""")
+            }
 
             scriptBeforeAll = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_BEFORE_ALL), null)
             scriptAfterAll = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_AFTER_ALL), null)
