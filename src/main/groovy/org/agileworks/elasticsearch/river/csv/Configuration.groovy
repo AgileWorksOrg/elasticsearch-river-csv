@@ -32,7 +32,7 @@ class Configuration {
     int bulkThreshold
     int concurrentRequests
     String idField
-    String idParent
+    String parentField
 
     String scriptBeforeAll
     String scriptAfterAll

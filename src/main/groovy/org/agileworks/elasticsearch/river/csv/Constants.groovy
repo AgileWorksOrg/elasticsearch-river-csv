@@ -26,7 +26,7 @@ class Constants {
         static final String FIELD_SEPARATOR = 'field_separator'
         static final String QUOTE_CHARACTER = 'quote_character'
         static final String FIELD_ID = 'field_id'
-        statif final String FIELD_PARENT = 'field_parent'
+        static final String FIELD_PARENT = 'field_parent'
 
         static final String CHARSET = 'charset'
 
