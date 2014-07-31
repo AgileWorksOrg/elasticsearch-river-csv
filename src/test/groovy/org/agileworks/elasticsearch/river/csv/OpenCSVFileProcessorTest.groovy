@@ -16,7 +16,7 @@ class OpenCSVFileProcessorTest extends Specification {
 
         listener = new TestFileListener()
 
-        configuration = new Configuration(new RiverSettings(null, ['csv_file':[:]]), 'myRiver')
+        configuration = new Configuration(new RiverSettings(null, ['csv_file': [:]]), 'myRiver')
         configuration.indexName = 'myIndex'
         configuration.typeName = 'csv'
     }
@@ -54,8 +54,9 @@ class OpenCSVFileProcessorTest extends Specification {
         given:
 
         configuration.firstLineIsHeader = true
+        configuration.idField = idColumnName
 
-        processor = new OpenCSVFileProcessor(configuration, getTestCsv('test_1_id_column.csv'), listener)
+        processor = new OpenCSVFileProcessor(configuration, getTestCsv("${fileName}.csv"), listener)
 
         when:
         processor.process()
@@ -73,11 +74,17 @@ class OpenCSVFileProcessorTest extends Specification {
             configuration.typeName == request.type()
         }
 
-        requests[0].id() == '1'
-        requests[1].id() == '2'
+        requests[0].id() == idValue[0]
+        requests[1].id() == idValue[1]
 
         requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
         requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+
+        where:
+
+        idColumnName    | fileName                         | idValue
+        'id'            | 'test_1_id_column'               | ['1', '2']
+        'ProductNumber' | 'test_1_ProductNumber_id_column' | ['223', '229']
     }
 
     def "process file w/o header"() {
