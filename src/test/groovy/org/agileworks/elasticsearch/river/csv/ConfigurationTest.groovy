@@ -79,6 +79,7 @@ class ConfigurationTest extends Specification {
         config.filenamePattern
         !config.folderName
         config.idField
+        config.idParent
         config.indexName
         config.poll
         config.quoteCharacter

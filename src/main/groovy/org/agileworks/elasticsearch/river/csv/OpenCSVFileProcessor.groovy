@@ -77,6 +77,10 @@ class OpenCSVFileProcessor implements FileProcessor {
             request.id(UUID.randomUUID().toString())
         }
 
+        if (csvContainsParentColumn()) {
+            request.parent(getParent(line))
+        }
+
         request.create(false).source(builder)
 
         listener.onLineProcessed(request)
@@ -86,9 +90,20 @@ class OpenCSVFileProcessor implements FileProcessor {
         return config.csvFields.find { it == config.idField }
     }
 
+    boolean csvContainsParentColumn() {
+        return config.csvFields.find { it == config.idParent }
+    }
+
     String getId(String[] line) {
 
         int index = config.csvFields.indexOf(config.idField)
+
+        return line[index]
+    }
+
+    String getParent(String[] line) {
+
+        int index = config.csvFields.indexOf(config.idParent)
 
         return line[index]
     }
