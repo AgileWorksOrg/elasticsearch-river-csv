@@ -60,7 +60,7 @@ class OpenCSVFileProcessor implements FileProcessor {
         int position = 0
         for (Object fieldName : config.csvFields) {
 
-            if (fieldName != config.idField) {
+            if (fieldName != config.idField && fieldName != config.parentField ) {
                 builder.field((String) fieldName, line[position])
             }
 
@@ -91,7 +91,7 @@ class OpenCSVFileProcessor implements FileProcessor {
     }
 
     boolean csvContainsParentColumn() {
-        return config.csvFields.find { it == config.idParent }
+        return config.csvFields.find { it == config.parentField }
     }
 
     String getId(String[] line) {
@@ -103,7 +103,7 @@ class OpenCSVFileProcessor implements FileProcessor {
 
     String getParent(String[] line) {
 
-        int index = config.csvFields.indexOf(config.idParent)
+        int index = config.csvFields.indexOf(config.parentField)
 
         return line[index]
     }
