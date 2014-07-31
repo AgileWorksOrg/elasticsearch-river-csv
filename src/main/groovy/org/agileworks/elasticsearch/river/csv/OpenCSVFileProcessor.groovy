@@ -2,12 +2,16 @@ package org.agileworks.elasticsearch.river.csv
 
 import au.com.bytecode.opencsv.CSVReader
 import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener
+import org.apache.commons.io.ByteOrderMark
+import org.apache.commons.io.input.BOMInputStream
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.client.Requests
 import org.elasticsearch.common.xcontent.XContentBuilder
 import org.elasticsearch.common.xcontent.XContentFactory
 
 class OpenCSVFileProcessor implements FileProcessor {
+
+    private static ByteOrderMark[] AVAILABLE_BOMS = [ByteOrderMark.UTF_8, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_32BE, ByteOrderMark.UTF_32LE].toArray()
 
     final Configuration config
     final File file
@@ -25,7 +29,9 @@ class OpenCSVFileProcessor implements FileProcessor {
 
         long linesCount = 0
 
-        CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file), config.charset), config.separator.charValue(), config.quoteCharacter, config.escapeCharacter)
+        BOMInputStream bomInputStream = new BOMInputStream(new FileInputStream(file), false, AVAILABLE_BOMS)
+
+        CSVReader reader = new CSVReader(new InputStreamReader(bomInputStream, config.charset), config.separator.charValue(), config.quoteCharacter, config.escapeCharacter)
 
         String[] nextLine
 

@@ -39,7 +39,7 @@ class CSVConnectorTest extends Specification {
 
         listener.listening() >> { connector.files.length > 0 }
 
-        8 * processor.process()
+        9 * processor.process()
 
         1 * listener.onAllFileProcessed()
 
@@ -57,7 +57,7 @@ class CSVConnectorTest extends Specification {
 
         then:
 
-        files.length == 8
+        files.length == 9
     }
 
     File getTestSourceFolder() {

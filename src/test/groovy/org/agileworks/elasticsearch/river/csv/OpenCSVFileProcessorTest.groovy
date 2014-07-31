@@ -4,7 +4,13 @@ import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.river.RiverSettings
 import spock.lang.Specification
 
+import java.nio.charset.Charset
+
 class OpenCSVFileProcessorTest extends Specification {
+
+
+    public static final ArrayList<String> DEFAULT_BODIES = ['{"Year":"1997","Make":"Ford","Model":"E350"}', '{"Year":"2000","Make":"Mercury","Model":"Cougar"}']
+    public static final ArrayList<String> TURKISH_BODIES = ['{"Title":"Decortie Labirent Kitaplık - Venge","":""}', '{"Title":"Erciyes Dağı - Kapadokya Tablosu RMB-237 - 190x120 cm","":""}']
 
     OpenCSVFileProcessor processor
 
@@ -45,8 +51,8 @@ class OpenCSVFileProcessorTest extends Specification {
             configuration.typeName == request.type()
         }
 
-        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
-        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+        requests[0].source().toUtf8() == DEFAULT_BODIES[0]
+        requests[1].source().toUtf8() == DEFAULT_BODIES[1]
     }
 
     def "process file w/ header and id column"() {
@@ -55,6 +61,8 @@ class OpenCSVFileProcessorTest extends Specification {
 
         configuration.firstLineIsHeader = true
         configuration.idField = idColumnName
+        configuration.charset = Charset.forName(charset)
+        configuration.separator = separator
 
         processor = new OpenCSVFileProcessor(configuration, getTestCsv("${fileName}.csv"), listener)
 
@@ -77,14 +85,15 @@ class OpenCSVFileProcessorTest extends Specification {
         requests[0].id() == idValue[0]
         requests[1].id() == idValue[1]
 
-        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
-        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+        requests[0].source().toUtf8() == body[0]
+        requests[1].source().toUtf8() == body[1]
 
         where:
 
-        idColumnName    | fileName                         | idValue
-        'id'            | 'test_1_id_column'               | ['1', '2']
-        'ProductNumber' | 'test_1_ProductNumber_id_column' | ['223', '229']
+        idColumnName    | fileName                         | idValue            | charset    | separator | body
+        'id'            | 'test_1_id_column'               | ['1', '2']         | 'UTF-8'    | ','       | DEFAULT_BODIES
+        'ProductNumber' | 'test_1_ProductNumber_id_column' | ['223', '229']     | 'UTF-8'    | ','       | DEFAULT_BODIES
+        'ProductNumber' | 'turkish_encoding'               | ['69377', '69379'] | 'UTF-16LE' | ';'       | TURKISH_BODIES
     }
 
     def "process file w/o header"() {
@@ -110,8 +119,8 @@ class OpenCSVFileProcessorTest extends Specification {
             configuration.typeName == request.type()
         }
 
-        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
-        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+        requests[0].source().toUtf8() == DEFAULT_BODIES[0]
+        requests[1].source().toUtf8() == DEFAULT_BODIES[1]
     }
 
     def "process file w/o header and tab separator"() {
@@ -138,8 +147,8 @@ class OpenCSVFileProcessorTest extends Specification {
             configuration.typeName == request.type()
         }
 
-        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
-        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+        requests[0].source().toUtf8() == DEFAULT_BODIES[0]
+        requests[1].source().toUtf8() == DEFAULT_BODIES[1]
     }
 
     def "process quoted file w/ header"() {
@@ -225,8 +234,8 @@ class OpenCSVFileProcessorTest extends Specification {
             configuration.typeName == request.type()
         }
 
-        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350"}'
-        requests[1].source().toUtf8() == '{"Year":"2000","Make":"Mercury","Model":"Cougar"}'
+        requests[0].source().toUtf8() == DEFAULT_BODIES[0]
+        requests[1].source().toUtf8() == DEFAULT_BODIES[1]
     }
 
     File getTestCsv(String name) {
