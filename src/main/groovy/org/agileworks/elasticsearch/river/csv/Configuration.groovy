@@ -32,6 +32,7 @@ class Configuration {
     int bulkThreshold
     int concurrentRequests
     String idField
+    String parentField
 
     String scriptBeforeAll
     String scriptAfterAll
@@ -55,6 +56,7 @@ class Configuration {
             separator = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_SEPARATOR), String.valueOf(',')).charAt(0)
             quoteCharacter = nodeStringValue(csvSettings.get(Constants.CSV.QUOTE_CHARACTER), String.valueOf('\"')).charAt(0)
             idField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_ID), 'id')
+            parentField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_PARENT), '')
             concurrentRequests = nodeIntegerValue(csvSettings.get(Constants.CSV.CONCURRENT_REQUESTS), 1)
 
             String charsetName = nodeStringValue(csvSettings.get(Constants.CSV.CHARSET), 'UTF-8')
