@@ -33,7 +33,7 @@ class CSVConnector implements Runnable {
                 listener.log('Using configuration: {}', config)
                 listener.log('Going to process files {}', files)
 
-                listener.onBeforeProcessingStart()
+                listener.onBeforeProcessingStart(files)
 
                 for (File file : files) {
 
@@ -54,7 +54,7 @@ class CSVConnector implements Runnable {
                     }
                 }
 
-                listener.onAllFileProcessed()
+                listener.onAllFileProcessed(files)
 
             } catch (Exception e) {
 

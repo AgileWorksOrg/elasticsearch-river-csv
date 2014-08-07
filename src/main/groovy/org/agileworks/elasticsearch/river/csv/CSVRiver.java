@@ -74,7 +74,7 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
     }
 
     @Override
-    public void onBeforeProcessingStart() {
+    public void onBeforeProcessingStart(File[] files) {
 
         bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {
             @Override
@@ -108,7 +108,7 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
     }
 
     @Override
-    public void onAllFileProcessed() {
+    public void onAllFileProcessed(File[] files) {
         bulkProcessor.close();
         delay();
     }

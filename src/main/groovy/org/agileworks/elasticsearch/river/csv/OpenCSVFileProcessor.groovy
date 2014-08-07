@@ -16,11 +16,13 @@ class OpenCSVFileProcessor implements FileProcessor {
     final Configuration config
     final File file
     final FileProcessorListener listener
+    final Date startTime
 
     OpenCSVFileProcessor(Configuration config, File file, FileProcessorListener listener) {
         this.config = config
         this.file = file
         this.listener = listener
+        this.startTime = new Date()
     }
 
     void process() {
@@ -72,6 +74,9 @@ class OpenCSVFileProcessor implements FileProcessor {
 
             position++
         }
+        if (null != config.timestampField) {
+            builder.field((String)config.timestampField, this.startTime)
+        }
 
         builder.endObject()
 
@@ -97,5 +102,9 @@ class OpenCSVFileProcessor implements FileProcessor {
         int index = config.csvFields.indexOf(config.idField)
 
         return line[index]
+    }
+
+    Date getStartTime() {
+        return this.startTime
     }
 }

@@ -35,7 +35,7 @@ class BashFileProcessorListenerSpec extends Specification {
     def "test onBeforeProcessingStart"() {
 
         when:
-        listener.onBeforeProcessingStart()
+        listener.onBeforeProcessingStart([new File('test_file.csv')])
 
         then:
         1 * logger.info("before all\n")
@@ -62,7 +62,7 @@ class BashFileProcessorListenerSpec extends Specification {
     def "test onAllFileProcessed"() {
 
         when:
-        listener.onAllFileProcessed()
+        listener.onAllFileProcessed([new File('test_file.csv')])
 
         then:
         1 * logger.info("after all\n", [])
@@ -74,7 +74,7 @@ class BashFileProcessorListenerSpec extends Specification {
         listener.scriptAfterAll = null
 
         when:
-        listener.onAllFileProcessed()
+        listener.onAllFileProcessed([new File('test_file.csv')])
 
         then:
         0 * logger.info(_)

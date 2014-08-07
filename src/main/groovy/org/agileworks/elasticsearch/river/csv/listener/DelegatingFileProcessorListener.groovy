@@ -16,8 +16,8 @@ class DelegatingFileProcessorListener implements FileProcessorListener {
     }
 
     @Override
-    void onBeforeProcessingStart() {
-        listeners*.onBeforeProcessingStart()
+    void onBeforeProcessingStart(File[] files) {
+        listeners*.onBeforeProcessingStart(files)
     }
 
     @Override
@@ -36,8 +36,8 @@ class DelegatingFileProcessorListener implements FileProcessorListener {
     }
 
     @Override
-    void onAllFileProcessed() {
-        listeners*.onAllFileProcessed()
+    void onAllFileProcessed(File[] files) {
+        listeners*.onAllFileProcessed(files)
     }
 
     @Override
