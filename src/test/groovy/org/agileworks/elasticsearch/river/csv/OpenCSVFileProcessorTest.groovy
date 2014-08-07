@@ -1,6 +1,9 @@
 package org.agileworks.elasticsearch.river.csv
 
 import org.elasticsearch.action.index.IndexRequest
+import org.elasticsearch.common.joda.time.DateTimeZone
+import org.elasticsearch.common.joda.time.format.DateTimeFormatter
+import org.elasticsearch.common.joda.time.format.ISODateTimeFormat
 import org.elasticsearch.river.RiverSettings
 import spock.lang.Specification
 
@@ -53,6 +56,36 @@ class OpenCSVFileProcessorTest extends Specification {
 
         requests[0].source().toUtf8() == DEFAULT_BODIES[0]
         requests[1].source().toUtf8() == DEFAULT_BODIES[1]
+    }
+
+    def "process file w/ timestamp"() {
+
+        given:
+
+        configuration.firstLineIsHeader = true
+        configuration.timestampField = "UpdatedAt"
+
+        processor = new OpenCSVFileProcessor(configuration, getTestCsv('test_1.csv'), listener)
+
+        when:
+        processor.process()
+
+        then:
+
+        listener.fileProcessed
+        listener.requests.size() == 2
+
+        List<IndexRequest> requests = listener.requests
+
+        requests.each { IndexRequest request ->
+            IndexRequest.OpType.INDEX == request.opType()
+            configuration.indexName == request.index()
+            configuration.typeName == request.type()
+        }
+
+        DateTimeFormatter timestampFormatter = ISODateTimeFormat.dateTime().withZone(DateTimeZone.UTC)
+        String timestamp = timestampFormatter.print(processor.getStartTime().getTime())
+        requests[0].source().toUtf8() == '{"Year":"1997","Make":"Ford","Model":"E350","UpdatedAt":"' + timestamp + '"}'
     }
 
     def "process file w/ header and id column"() {
