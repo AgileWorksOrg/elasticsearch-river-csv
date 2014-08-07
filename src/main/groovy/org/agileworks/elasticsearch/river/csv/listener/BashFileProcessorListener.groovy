@@ -37,8 +37,8 @@ class BashFileProcessorListener implements FileProcessorListener {
     }
 
     @Override
-    void onBeforeProcessingStart() {
-        runAndLog(scriptBeforeAll)
+    void onBeforeProcessingStart(File[] files) {
+        runAndLog(scriptBeforeAll, files)
     }
 
     @Override
@@ -57,8 +57,8 @@ class BashFileProcessorListener implements FileProcessorListener {
     }
 
     @Override
-    void onAllFileProcessed() {
-        runAndLog(scriptAfterAll)
+    void onAllFileProcessed(File[] files) {
+        runAndLog(scriptAfterAll, files)
     }
 
     @Override
@@ -81,21 +81,21 @@ class BashFileProcessorListener implements FileProcessorListener {
 
     }
 
-    void runAndLog(File file, def arg = '') {
+    void runAndLog(File file, Object... args) {
 
         if(file && file.exists()) {
 
-            String result = runScript(file, arg)
+            String result = runScript(file, args)
             logger.info(result)
         }
     }
 
-    String runScript(File file, def arg = '') {
+    String runScript(File file, Object... args) {
 
         try {
 
             if (file && file.exists()) {
-                def process = [file.absolutePath, arg].execute()
+                def process = [file.absolutePath, args.join(" ")].execute()
                 return process.text
             }
 

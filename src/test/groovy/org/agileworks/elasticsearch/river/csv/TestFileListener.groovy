@@ -21,7 +21,7 @@ class TestFileListener implements FileProcessorListener {
     }
 
     @Override
-    void onBeforeProcessingStart() {
+    void onBeforeProcessingStart(File[] files) {
 
     }
 
@@ -31,7 +31,7 @@ class TestFileListener implements FileProcessorListener {
     }
 
     @Override
-    void onAllFileProcessed() {
+    void onAllFileProcessed(File[] files) {
         allFileProcessed = true
     }
 

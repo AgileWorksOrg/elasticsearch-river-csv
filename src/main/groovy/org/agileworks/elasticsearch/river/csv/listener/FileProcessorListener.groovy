@@ -8,7 +8,7 @@ import org.elasticsearch.action.index.IndexRequest
  */
 public interface FileProcessorListener {
 
-    void onBeforeProcessingStart()
+    void onBeforeProcessingStart(File[] files)
 
     void onBeforeFileProcess(File file)
 
@@ -16,7 +16,7 @@ public interface FileProcessorListener {
 
     void onFileProcessed(File file)
 
-    void onAllFileProcessed()
+    void onAllFileProcessed(File[] files)
 
     void onError(Exception e)
 

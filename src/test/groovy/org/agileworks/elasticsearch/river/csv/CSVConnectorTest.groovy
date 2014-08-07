@@ -41,7 +41,7 @@ class CSVConnectorTest extends Specification {
 
         9 * processor.process()
 
-        1 * listener.onAllFileProcessed()
+        1 * listener.onAllFileProcessed(connector.files)
 
         _ * listener.log(_, _)
 

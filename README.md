@@ -33,6 +33,7 @@ The CSV river import data from CSV files and index it.
 
 * added support for custom charset
 * added support for generating an import timestamp in all imported documents
+* made list of files to be imported / which have been imported visible to the before/after listener scripts
 
 ###2.1.0
 
@@ -106,7 +107,7 @@ The CSV river import data from CSV files and index it.
 	    }
 	}'
 
-* takes no arguments
+* takes list of all file paths as arguments
 
 	    "script_before_all": "/path/to/before_all.sh"
     	"script_after_all": "/path/to/after_all.sh"
@@ -119,7 +120,7 @@ The CSV river import data from CSV files and index it.
 ####Examples how the files look like
 
         #!/bin/sh
-        echo "greetings from shell before all"
+        echo "greetings from shell before all, will process $*"
 
 
         #!/bin/bash
@@ -131,7 +132,7 @@ The CSV river import data from CSV files and index it.
 
 
         #!/bin/bash
-        echo "greetings from shell after all"
+        echo "greetings from shell after all, processed $*"
 
 
 ###Optional parameters:
