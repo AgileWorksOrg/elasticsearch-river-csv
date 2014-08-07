@@ -32,6 +32,7 @@ The CSV river import data from CSV files and index it.
 ###2.1.1-SNAPSHOT
 
 * added support for custom charset
+* added support for generating an import timestamp in all imported documents
 
 ###2.1.0
 
