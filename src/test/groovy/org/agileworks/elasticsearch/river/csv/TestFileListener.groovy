@@ -51,6 +51,11 @@ class TestFileListener implements FileProcessorListener {
     }
 
     @Override
+    void log(String message) {
+        messages << message
+    }
+
+    @Override
     void onErrorAndContinue(Exception e, String message) {
 
     }

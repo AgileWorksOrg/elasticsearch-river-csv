@@ -87,8 +87,14 @@ class CSVConnector implements Runnable {
 
         File folder = new File(config.folderName)
 
+        listener.log("All files in folder: " + folder.listFiles().collect { it.name })
+
         def filter = ['accept': { File file, String s -> s.matches(config.filenamePattern) }] as FilenameFilter
 
-        return folder.listFiles(filter)
+        File[] acceptedFiles = folder.listFiles(filter)
+
+        listener.log("Accepted files: " + acceptedFiles.collect { it.name })
+
+        return acceptedFiles
     }
 }

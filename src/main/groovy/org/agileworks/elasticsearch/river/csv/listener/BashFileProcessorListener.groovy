@@ -81,6 +81,11 @@ class BashFileProcessorListener implements FileProcessorListener {
 
     }
 
+    @Override
+    void log(String message) {
+
+    }
+
     void runAndLog(File file, Object... args) {
 
         if(file && file.exists()) {

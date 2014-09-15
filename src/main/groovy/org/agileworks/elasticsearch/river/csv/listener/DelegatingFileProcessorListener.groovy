@@ -59,4 +59,9 @@ class DelegatingFileProcessorListener implements FileProcessorListener {
     void log(String message, Object... args) {
         listeners*.log(message, args)
     }
+
+    @Override
+    void log(String message) {
+        listeners*.log(message)
+    }
 }

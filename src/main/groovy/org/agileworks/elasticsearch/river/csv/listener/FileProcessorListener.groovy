@@ -24,5 +24,7 @@ public interface FileProcessorListener {
 
     boolean listening()
 
+    void log(String message)
+
     void log(String message, Object...args)
 }
