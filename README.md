@@ -4,7 +4,7 @@ CSV River Plugin for ElasticSearch
 The CSV River plugin allows index CSV files in folder.
 
 In order to install the plugin, simply run: 
-```bin/plugin -install river-csv -url https://github.com/AgileWorksOrg/elasticsearch-river-csv/releases/download/2.1.0/elasticsearch-river-csv-2.1.0.zip```.
+```bin/plugin -install river-csv -url https://github.com/AgileWorksOrg/elasticsearch-river-csv/releases/download/2.1.1/elasticsearch-river-csv-2.1.1.zip```.
 
 If it doesn't work, clone git repository and build plugin manually.
 
@@ -29,7 +29,11 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
-###2.1.1-SNAPSHOT
+###2.1.2-SNAPSHOT
+
+* no changes yet
+
+###2.1.1
 
 * added support for custom charset
 * added support for generating an import timestamp in all imported documents
