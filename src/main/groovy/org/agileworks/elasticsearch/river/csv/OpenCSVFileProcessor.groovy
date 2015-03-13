@@ -68,7 +68,7 @@ class OpenCSVFileProcessor implements FileProcessor {
         int position = 0
         for (Object fieldName : config.csvFields) {
 
-            if (fieldName != config.idField) {
+            if (config.idFieldInclude || fieldName != config.idField) {
                 builder.field((String) fieldName, line[position])
             }
 
