@@ -34,25 +34,31 @@ class OpenCSVFileProcessor implements FileProcessor {
         BOMInputStream bomInputStream = new BOMInputStream(new FileInputStream(file), false, AVAILABLE_BOMS)
 
         CSVReader reader = new CSVReader(new InputStreamReader(bomInputStream, config.charset), config.separator.charValue(), config.quoteCharacter, config.escapeCharacter)
+        try {
 
-        String[] nextLine
+            String[] nextLine
 
-        while ((nextLine = reader.readNext()) != null) {
+            while ((nextLine = reader.readNext()) != null) {
 
-            if (linesCount == 0 && config.firstLineIsHeader) {
+                if (linesCount == 0 && config.firstLineIsHeader) {
 
-                config.csvFields = Arrays.asList(nextLine)
+                    config.csvFields = Arrays.asList(nextLine)
 
-            } else if (nextLine.length > 0 && !(nextLine.length == 1 && nextLine[0].trim().equals(''))) {
+                } else if (nextLine.length > 0 && !(nextLine.length == 1 && nextLine[0].trim().equals(''))) {
 
-                try {
-                    processDataLine(nextLine)
-                } catch (Exception e) {
-                    listener.onErrorAndContinue(e, "Error has occured during processing file '$file.name' , skipping line: '${nextLine}' and continue in processing")
+                    try {
+                        processDataLine(nextLine)
+                    } catch (Exception e) {
+                        listener.onErrorAndContinue(e, "Error has occured during processing file '$file.name' , skipping line: '${nextLine}' and continue in processing")
+                    }
                 }
+
+                linesCount++
             }
 
-            linesCount++
+        }
+        finally {
+            reader.close()
         }
 
         listener.onFileProcessed(file)
