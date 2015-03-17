@@ -97,6 +97,7 @@ The CSV river import data from CSV files and index it.
 	        "escape_character" : ";",
 	        "quote_character" : "'",
             "field_id" : "id",
+            "field_id_include" : "false",
             "field_timestamp" : "imported_at",
             "concurrent_requests" : "1",
             "charset" : "UTF-8",

@@ -32,6 +32,7 @@ class Configuration {
     int bulkThreshold
     int concurrentRequests
     String idField
+    boolean idFieldInclude = false
     String timestampField
 
     String scriptBeforeAll
@@ -56,6 +57,7 @@ class Configuration {
             separator = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_SEPARATOR), String.valueOf(',')).charAt(0)
             quoteCharacter = nodeStringValue(csvSettings.get(Constants.CSV.QUOTE_CHARACTER), String.valueOf('\"')).charAt(0)
             idField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_ID), 'id')
+            idFieldInclude = nodeBooleanValue(csvSettings.get(Constants.CSV.FIELD_ID_INCLUDE, false))
             timestampField = nodeStringValue(csvSettings.get(Constants.CSV.FIELD_TIMESTAMP), null)
             concurrentRequests = nodeIntegerValue(csvSettings.get(Constants.CSV.CONCURRENT_REQUESTS), 1)
 

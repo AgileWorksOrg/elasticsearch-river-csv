@@ -94,6 +94,7 @@ class OpenCSVFileProcessorTest extends Specification {
 
         configuration.firstLineIsHeader = true
         configuration.idField = idColumnName
+        configuration.idFieldInclude = idColumnInclude
         configuration.charset = Charset.forName(charset)
         configuration.separator = separator
 
@@ -123,10 +124,13 @@ class OpenCSVFileProcessorTest extends Specification {
 
         where:
 
-        idColumnName    | fileName                         | idValue            | charset    | separator | body
-        'id'            | 'test_1_id_column'               | ['1', '2']         | 'UTF-8'    | ','       | DEFAULT_BODIES
-        'ProductNumber' | 'test_1_ProductNumber_id_column' | ['223', '229']     | 'UTF-8'    | ','       | DEFAULT_BODIES
-        'ProductNumber' | 'turkish_encoding'               | ['69377', '69379'] | 'UTF-16LE' | ';'       | TURKISH_BODIES
+        idColumnName    | idColumnInclude | fileName                         | idValue            | charset    | separator | body
+        'id'            | false           | 'test_1_id_column'               | ['1', '2']         | 'UTF-8'    | ','       | DEFAULT_BODIES
+        'ProductNumber' | false           | 'test_1_ProductNumber_id_column' | ['223', '229']     | 'UTF-8'    | ','       | DEFAULT_BODIES
+        'ProductNumber' | false           | 'turkish_encoding'               | ['69377', '69379'] | 'UTF-16LE' | ';'       | TURKISH_BODIES
+        'id'            | true            | 'test_1_id_column'               | ['1', '2']         | 'UTF-8'    | ','       | ['{"id":"1","Year":"1997","Make":"Ford","Model":"E350"}', '{"id":"2","Year":"2000","Make":"Mercury","Model":"Cougar"}']
+        'ProductNumber' | true            | 'test_1_ProductNumber_id_column' | ['223', '229']     | 'UTF-8'    | ','       | ['{"ProductNumber":"223","Year":"1997","Make":"Ford","Model":"E350"}', '{"ProductNumber":"229","Year":"2000","Make":"Mercury","Model":"Cougar"}']
+        'ProductNumber' | true            | 'turkish_encoding'               | ['69377', '69379'] | 'UTF-16LE' | ';'       | ['{"ProductNumber":"69377","Title":"Decortie Labirent Kitaplık - Venge","":""}', '{"ProductNumber":"69379","Title":"Erciyes Dağı - Kapadokya Tablosu RMB-237 - 190x120 cm","":""}']
     }
 
     def "process file w/o header"() {
