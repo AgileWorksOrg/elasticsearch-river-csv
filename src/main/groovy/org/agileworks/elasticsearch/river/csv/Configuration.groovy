@@ -42,6 +42,8 @@ class Configuration {
 
     Charset charset = Charset.forName('UTF-8')
 
+    Map<String, Object> rowFilter
+
     Configuration(RiverSettings settings, String riverName) {
 
         if (settings.settings().containsKey(Constants.CSV_FILE)) {
@@ -84,6 +86,8 @@ UTF-16      Sixteen-bit UCS Transformation Format, byte order identified by an o
 More details about charsets are available at http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html
 """)
             }
+
+            rowFilter = (Map<String, Object>) csvSettings.get(Constants.CSV.ROW_FILTER)
 
             scriptBeforeAll = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_BEFORE_ALL), null)
             scriptAfterAll = nodeStringValue(csvSettings.get(Constants.CSV.SCRIPT_AFTER_ALL), null)

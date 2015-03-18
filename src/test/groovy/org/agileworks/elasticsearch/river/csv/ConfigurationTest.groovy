@@ -85,5 +85,6 @@ class ConfigurationTest extends Specification {
         config.quoteCharacter
         config.separator
         config.typeName
+        !config.rowFilter
     }
 }

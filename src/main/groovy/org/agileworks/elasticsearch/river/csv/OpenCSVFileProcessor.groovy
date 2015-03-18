@@ -1,6 +1,7 @@
 package org.agileworks.elasticsearch.river.csv
 
 import au.com.bytecode.opencsv.CSVReader
+import java.util.regex.*
 import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener
 import org.apache.commons.io.ByteOrderMark
 import org.apache.commons.io.input.BOMInputStream
@@ -8,6 +9,7 @@ import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.client.Requests
 import org.elasticsearch.common.xcontent.XContentBuilder
 import org.elasticsearch.common.xcontent.XContentFactory
+import static org.elasticsearch.common.xcontent.support.XContentMapValues.*
 
 class OpenCSVFileProcessor implements FileProcessor {
 
@@ -73,6 +75,49 @@ class OpenCSVFileProcessor implements FileProcessor {
 
         int position = 0
         for (Object fieldName : config.csvFields) {
+
+            if (config.rowFilter != null && config.rowFilter.containsKey(fieldName) ) {
+
+                String filter = nodeStringValue(config.rowFilter.get(fieldName), '')
+
+                boolean excludeOnMatch = false
+
+                if (filter.length() > 0 && filter.startsWith('!')) {
+
+                    filter = filter.substring(1, filter.length())
+
+                    excludeOnMatch = true
+                }
+
+                if (filter.length() > 1 && filter.startsWith('/') && filter.endsWith('/')) {
+
+                    filter = filter.substring(1, filter.length() - 1)
+
+                    if (line[position] ==~ filter) {
+                        if (excludeOnMatch)
+                        {                        
+                            return
+                        }
+                    }
+                    else if (!excludeOnMatch) {
+                        return
+                    }
+
+                }
+                else {
+
+                    if (line[position] == filter) {
+                        if (excludeOnMatch)
+                        {                        
+                            return
+                        }
+                    }
+                    else if (!excludeOnMatch) {
+                        return
+                    }
+
+                }
+            }
 
             if (config.idFieldInclude || fieldName != config.idField) {
                 builder.field((String) fieldName, line[position])

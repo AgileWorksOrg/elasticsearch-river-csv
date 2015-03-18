@@ -33,6 +33,8 @@ class Constants {
 
         static final String CONCURRENT_REQUESTS = 'concurrent_requests'
 
+        static final String ROW_FILTER = 'row_filter'
+
         static final String SCRIPT_BEFORE_ALL = 'script_before_all'
         static final String SCRIPT_AFTER_ALL = 'script_after_all'
         static final String SCRIPT_BEFORE_FILE = 'script_before_file'

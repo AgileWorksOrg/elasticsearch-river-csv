@@ -101,6 +101,12 @@ The CSV river import data from CSV files and index it.
             "field_timestamp" : "imported_at",
             "concurrent_requests" : "1",
             "charset" : "UTF-8",
+            "row_filter" : {
+                "column1" : "Value Match",
+                "column2" : "!Exclude Value Match",
+                "column3" : "/RegEx Match/"
+                "column4" : "!/Exclude RegEx Match/"
+	        },
             "script_before_all": "/path/to/before_all.sh",
             "script_after_all": "/path/to/after_all.sh",
             "script_before_file": "/path/to/before_file.sh",
