@@ -133,6 +133,53 @@ class OpenCSVFileProcessorTest extends Specification {
         'ProductNumber' | true            | 'turkish_encoding'               | ['69377', '69379'] | 'UTF-16LE' | ';'       | ['{"ProductNumber":"69377","Title":"Decortie Labirent Kitaplık - Venge","":""}', '{"ProductNumber":"69379","Title":"Erciyes Dağı - Kapadokya Tablosu RMB-237 - 190x120 cm","":""}']
     }
 
+
+    def "process file w/ row filter"() {
+
+        given:
+
+        configuration.firstLineIsHeader = true
+        configuration.idField = idColumnName
+        configuration.charset = Charset.forName(charset)
+        configuration.separator = separator
+        configuration.rowFilter = new HashMap()
+        configuration.rowFilter.put(rowFilterField, rowFilterValue)
+
+        processor = new OpenCSVFileProcessor(configuration, getTestCsv("${fileName}.csv"), listener)
+
+        when:
+        processor.process()
+
+        then:
+
+        listener.fileProcessed
+        listener.requests.size() == 1
+
+        List<IndexRequest> requests = listener.requests
+
+        requests.each { IndexRequest request ->
+            IndexRequest.OpType.INDEX == request.opType()
+            configuration.indexName == request.index()
+            configuration.typeName == request.type()
+        }
+
+        requests[0].id() == idValue[0]
+
+        requests[0].source().toUtf8() == body[0]
+
+        where:
+
+        idColumnName    | fileName                         | rowFilterField  | rowFilterValue | idValue   | charset    | separator | body
+        'id'            | 'test_1_id_column'               | 'id'            | '2'            | ['2']     | 'UTF-8'    | ','       | ['{"Year":"2000","Make":"Mercury","Model":"Cougar"}']
+        'ProductNumber' | 'test_1_ProductNumber_id_column' | 'Model'         | '/Cou.*/'      | ['229']   | 'UTF-8'    | ','       | ['{"Year":"2000","Make":"Mercury","Model":"Cougar"}']
+        'ProductNumber' | 'test_1_ProductNumber_id_column' | 'Model'         | '!/E3.*/'      | ['229']   | 'UTF-8'    | ','       | ['{"Year":"2000","Make":"Mercury","Model":"Cougar"}']
+        'ProductNumber' | 'turkish_encoding'               | 'Title'         | '/.+Dağı.+/'   | ['69379'] | 'UTF-16LE' | ';'       | ['{"Title":"Erciyes Dağı - Kapadokya Tablosu RMB-237 - 190x120 cm","":""}']
+        'id'            | 'test_1_id_column'               | 'Make'          | 'Ford'         | ['1']     | 'UTF-8'    | ','       | ['{"Year":"1997","Make":"Ford","Model":"E350"}']
+        'ProductNumber' | 'test_1_ProductNumber_id_column' | 'Year'          | '1997'         | ['223']   | 'UTF-8'    | ','       | ['{"Year":"1997","Make":"Ford","Model":"E350"}']
+        'ProductNumber' | 'test_1_ProductNumber_id_column' | 'Year'          | '!2000'        | ['223']   | 'UTF-8'    | ','       | ['{"Year":"1997","Make":"Ford","Model":"E350"}']
+        'ProductNumber' | 'turkish_encoding'               | 'ProductNumber' | '69377'        | ['69377'] | 'UTF-16LE' | ';'       | ['{"Title":"Decortie Labirent Kitaplık - Venge","":""}']
+    }
+
     def "process file w/o header"() {
 
         given:
