@@ -2,10 +2,16 @@ package org.agileworks.elasticsearch.river.csv
 
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
+import org.elasticsearch.common.settings.ImmutableSettings
+import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.TimeValue
+import org.elasticsearch.env.Environment
 import org.elasticsearch.river.RiverSettings
 
+import java.io.File
 import java.nio.charset.Charset
+import java.nio.file.Path
+import java.nio.file.Paths
 
 import static org.elasticsearch.common.xcontent.support.XContentMapValues.*
 
@@ -108,6 +114,65 @@ More details about charsets are available at http://docs.oracle.com/javase/6/doc
             typeName = Constants.Index.TYPE_VALUE
             bulkSize = 100
             bulkThreshold = 10
+        }
+
+        ValidateScripts(settings)
+    }
+
+    void ValidateScripts(RiverSettings settings)
+    {
+        if (!scriptBeforeAll && !scriptAfterAll && !scriptBeforeFile && !scriptAfterFile){
+            return
+        }
+
+        if (!settings.globalSettings()) {
+            return
+        }
+
+        Environment environment = new Environment(settings.globalSettings())
+
+        String pluginPath = new File(environment.pluginsFile(), "river-csv").toString()
+
+        File immutableSettingsFile = new File(pluginPath, "immutable-settings.json")
+
+        if (!immutableSettingsFile.exists()) {
+            return
+        }
+
+        Settings immutableSettings = ImmutableSettings.settingsBuilder().loadFromSource(immutableSettingsFile.text).build();
+
+        List<Object> allowed_script_folders = extractRawValues('allowed_script_folders', immutableSettings.getAsStructuredMap())
+
+        if (!allowed_script_folders) {
+            return
+        }
+
+        ValidateScript(scriptBeforeAll, allowed_script_folders)
+        ValidateScript(scriptAfterAll, allowed_script_folders)
+        ValidateScript(scriptBeforeFile, allowed_script_folders)
+        ValidateScript(scriptAfterFile, allowed_script_folders)
+    }
+
+    void ValidateScript(String script, List<Object> allowed_script_folders) {
+        if (!script) {
+            return
+        }
+
+        boolean valid = false
+
+        for (String allowedScriptFolder : allowed_script_folders) {
+
+            Path scriptPath = Paths.get(script)
+
+            if (scriptPath.startsWith(allowedScriptFolder)) {
+                valid = true
+                break
+            }
+
+        }
+
+        if (!valid) {
+            throw new ConfigurationException("""Script $script is not allowed to run from the specified folder.""")
         }
     }
 }
