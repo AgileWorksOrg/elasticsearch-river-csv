@@ -141,6 +141,18 @@ The CSV river import data from CSV files and index it.
         #!/bin/bash
         echo "greetings from shell after all, processed $*"
 
+####To limit what folders scripts are allowed to run from:
+
+Create an "immutable-settings.json" file in the plugins/river-csv folder with content similar to this:
+
+    {
+        "allowed_script_folders" : [
+            "/Path/To/Scripts/Folder/1/",
+            "/Path/To/Scripts/Folder/2/"
+        ]
+    }
+
+Scripts that are not in the listed folders or one of its subfolders will not be allowed to run.
 
 ###Optional parameters:
 
