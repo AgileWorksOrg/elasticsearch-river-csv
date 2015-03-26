@@ -3,9 +3,8 @@ package org.agileworks.elasticsearch.river.csv;
 import org.agileworks.elasticsearch.river.csv.listener.BashFileProcessorListener;
 import org.agileworks.elasticsearch.river.csv.listener.DelegatingFileProcessorListener;
 import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener;
-import org.agileworks.elasticsearch.river.csv.processrunner.GeneralProcessRunnerFactory;
 import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunnerFactory;
-import org.agileworks.elasticsearch.river.csv.processrunner.WindowsProcessRunnerFactory;
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunner;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -40,16 +39,9 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
 
         config = new Configuration(settings, riverName.name());
 
-        ProcessRunnerFactory processRunnerFactory;
+        ProcessRunner processRunner = ProcessRunnerFactory.getInstance().getRunner();
 
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            processRunnerFactory = new WindowsProcessRunnerFactory();
-        }
-        else {
-            processRunnerFactory = new GeneralProcessRunnerFactory();
-        }
-
-        listener = new DelegatingFileProcessorListener(this, new BashFileProcessorListener(logger, config, processRunnerFactory));
+        listener = new DelegatingFileProcessorListener(this, new BashFileProcessorListener(logger, config, processRunner));
     }
 
     @Override

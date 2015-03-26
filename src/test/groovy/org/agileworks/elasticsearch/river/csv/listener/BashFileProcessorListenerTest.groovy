@@ -1,9 +1,8 @@
 package org.agileworks.elasticsearch.river.csv.listener
 
 import org.agileworks.elasticsearch.river.csv.Configuration
-import org.agileworks.elasticsearch.river.csv.processrunner.GeneralProcessRunnerFactory
 import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunnerFactory
-import org.agileworks.elasticsearch.river.csv.processrunner.WindowsProcessRunnerFactory
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunner
 import org.elasticsearch.common.logging.ESLogger
 import org.elasticsearch.river.RiverSettings
 import spock.lang.Specification
@@ -24,10 +23,9 @@ class BashFileProcessorListenerTest extends Specification {
 
         Map csvFile
 
-        ProcessRunnerFactory processRunnerFactory
+        ProcessRunner processRunner = ProcessRunnerFactory.instance.getRunner()
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            processRunnerFactory = new WindowsProcessRunnerFactory()
 
             csvFile = [ 'script_before_all' : getScript('before_import.bat'),
                             'script_after_all' : getScript('after_import.bat'),
@@ -36,7 +34,6 @@ class BashFileProcessorListenerTest extends Specification {
             ]
         }
         else {
-            processRunnerFactory = new GeneralProcessRunnerFactory()
 
             csvFile = [ 'script_before_all' : getScript('before_import.sh'),
                             'script_after_all' : getScript('after_import.sh'),
@@ -49,7 +46,7 @@ class BashFileProcessorListenerTest extends Specification {
 
         logger = Mock(ESLogger)
 
-        listener = new BashFileProcessorListener(logger, new Configuration(riverSettings, 'csv'), processRunnerFactory)
+        listener = new BashFileProcessorListener(logger, new Configuration(riverSettings, 'csv'), processRunner)
     }
 
     def "test onBeforeProcessingStart"() {

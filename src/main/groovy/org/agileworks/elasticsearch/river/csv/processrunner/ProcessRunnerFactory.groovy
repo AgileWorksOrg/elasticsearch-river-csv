@@ -1,6 +1,21 @@
 package org.agileworks.elasticsearch.river.csv.processrunner
 
-public interface ProcessRunnerFactory {
+import groovy.transform.CompileStatic
 
-    ProcessRunner create()
+@CompileStatic
+class ProcessRunnerFactory {
+
+    private static final ProcessRunnerFactory INSTANCE = new ProcessRunnerFactory()
+    public static ProcessRunnerFactory getInstance() { 
+        return INSTANCE 
+    }
+
+    @Override
+    ProcessRunner getRunner() {
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            return new WindowsProcessRunner()
+        }
+
+        return new GeneralProcessRunner()
+    }
 }
