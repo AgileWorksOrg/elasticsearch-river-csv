@@ -1,6 +1,8 @@
 package org.agileworks.elasticsearch.river.csv.listener
 
 import org.agileworks.elasticsearch.river.csv.Configuration
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunner
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunnerFactory
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.common.logging.ESLogger
 
@@ -16,8 +18,11 @@ class BashFileProcessorListener implements FileProcessorListener {
     File scriptBeforeFile
     File scriptAfterFile
 
-    BashFileProcessorListener(ESLogger logger, Configuration configuration) {
+    ProcessRunnerFactory processRunnerFactory
+
+    BashFileProcessorListener(ESLogger logger, Configuration configuration, ProcessRunnerFactory processRunnerFactory) {
         this.logger = logger
+        this.processRunnerFactory = processRunnerFactory
 
         if (configuration.scriptBeforeAll) {
             scriptBeforeAll = new File(configuration.scriptBeforeAll)
@@ -101,30 +106,9 @@ class BashFileProcessorListener implements FileProcessorListener {
 
             if (file && file.exists()) {
                 
-                def process
+                ProcessRunner processRunner = processRunnerFactory.create()
 
-                if (System.properties['os.name'].toLowerCase().contains('windows')) {
-
-                    String fileName = file.name.toLowerCase()
-
-                    if (fileName.endsWith('.sh') ) {
-                        process = ["sh", file.absolutePath, args.join(" ")].execute()                    
-                    }
-                    else if (fileName.endsWith('.ps1')) {
-                        process = ["PowerShell", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", file.absolutePath, args.join(" ")].execute()                    
-                    }
-                    else if (fileName.endsWith('.wsf') || fileName.endsWith('.wsh') || fileName.endsWith('.vbs') || fileName.endsWith('.js')) {
-                        process = ["CScript", "//NoLogo", file.absolutePath, args.join(" ")].execute()                    
-                    }
-                    else {
-                        process = [file.absolutePath, args.join(" ")].execute()
-                    }
-                }
-                else {
-                    process = [file.absolutePath, args.join(" ")].execute()
-                }
-
-                return process.text
+                return processRunner.runScript(file, args)
             }
 
         } catch (Exception e) {

@@ -1,0 +1,1 @@
+@echo after file %1
