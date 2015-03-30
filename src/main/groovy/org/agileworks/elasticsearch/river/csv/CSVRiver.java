@@ -3,6 +3,8 @@ package org.agileworks.elasticsearch.river.csv;
 import org.agileworks.elasticsearch.river.csv.listener.BashFileProcessorListener;
 import org.agileworks.elasticsearch.river.csv.listener.DelegatingFileProcessorListener;
 import org.agileworks.elasticsearch.river.csv.listener.FileProcessorListener;
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunnerFactory;
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunner;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -37,7 +39,9 @@ public class CSVRiver extends AbstractRiverComponent implements River, FileProce
 
         config = new Configuration(settings, riverName.name());
 
-        listener = new DelegatingFileProcessorListener(this, new BashFileProcessorListener(logger, config));
+        ProcessRunner processRunner = ProcessRunnerFactory.getInstance().getRunner();
+
+        listener = new DelegatingFileProcessorListener(this, new BashFileProcessorListener(logger, config, processRunner));
     }
 
     @Override

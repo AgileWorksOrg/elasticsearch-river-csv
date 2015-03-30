@@ -1,6 +1,7 @@
 package org.agileworks.elasticsearch.river.csv.listener
 
 import org.agileworks.elasticsearch.river.csv.Configuration
+import org.agileworks.elasticsearch.river.csv.processrunner.ProcessRunner
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.common.logging.ESLogger
 
@@ -16,8 +17,11 @@ class BashFileProcessorListener implements FileProcessorListener {
     File scriptBeforeFile
     File scriptAfterFile
 
-    BashFileProcessorListener(ESLogger logger, Configuration configuration) {
+    ProcessRunner processRunner
+
+    BashFileProcessorListener(ESLogger logger, Configuration configuration, ProcessRunner processRunner) {
         this.logger = logger
+        this.processRunner = processRunner
 
         if (configuration.scriptBeforeAll) {
             scriptBeforeAll = new File(configuration.scriptBeforeAll)
@@ -100,8 +104,8 @@ class BashFileProcessorListener implements FileProcessorListener {
         try {
 
             if (file && file.exists()) {
-                def process = [file.absolutePath, args.join(" ")].execute()
-                return process.text
+
+                return processRunner.runScript(file, args)
             }
 
         } catch (Exception e) {

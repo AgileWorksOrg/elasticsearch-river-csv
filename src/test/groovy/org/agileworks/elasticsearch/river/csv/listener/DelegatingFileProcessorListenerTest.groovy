@@ -5,7 +5,7 @@ import spock.lang.Specification
 /**
  * Created by vitek on 27/03/14.
  */
-class DelegatingFileProcessorListenerSpec extends Specification {
+class DelegatingFileProcessorListenerTest extends Specification {
 
     FileProcessorListener listener1
     FileProcessorListener listener2

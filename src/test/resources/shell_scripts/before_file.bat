@@ -1,0 +1,1 @@
+@echo before file %1
