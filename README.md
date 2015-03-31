@@ -12,7 +12,7 @@ If it doesn't work, clone git repository and build plugin manually.
     -------------------------------------
     | CSV Plugin     | ElasticSearch    |
     -------------------------------------
-    | master         | 1.4.x -> master  |
+    | master         | 1.5.x -> master  |
     -------------------------------------
     | 2.1.1          | 1.4.x -> master  |
     -------------------------------------
