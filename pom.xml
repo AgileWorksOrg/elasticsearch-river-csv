@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.agileworks</groupId>
     <artifactId>elasticsearch-river-csv</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.2.0</version>
     <packaging>jar</packaging>
     <description>CSV River for ElasticSearch</description>
-    <inceptionYear>2014</inceptionYear>
+    <inceptionYear>2015</inceptionYear>
     <organization>
         <name>AgileWorks</name>
         <url>http://github.com/AgileWorksOrg/elasticsearch-river-csv</url>
@@ -32,14 +32,14 @@
     </parent>
 
     <properties>
-        <elasticsearch.version>1.0.0</elasticsearch.version>
+        <elasticsearch.version>1.5.0</elasticsearch.version>
         <java.version>1.6</java.version>
 
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <groovy.version>2.4.0</groovy.version>
-        <groovy.eclipse.compiler.version>2.8.0-01</groovy.eclipse.compiler.version>
-        <groovy-eclipse-batch.version>2.1.8-01</groovy-eclipse-batch.version>
-        <spock.version>0.7-groovy-2.0</spock.version>
+        <groovy.eclipse.compiler.version>2.9.2-01</groovy.eclipse.compiler.version>
+        <groovy-eclipse-batch.version>2.4.3-01</groovy-eclipse-batch.version>
+        <spock.version>1.0-groovy-2.4</spock.version>
         <opencsv.version>2.3</opencsv.version>
         <hamcrest.version>1.3</hamcrest.version>
         <log4j.version>1.2.16</log4j.version>

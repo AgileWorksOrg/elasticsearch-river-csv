@@ -14,6 +14,8 @@ If it doesn't work, clone git repository and build plugin manually.
     -------------------------------------
     | master         | 1.5.x -> master  |
     -------------------------------------
+    | 2.2.0          | 1.5.x -> master  |
+    -------------------------------------
     | 2.1.2          | 1.4.x -> master  |
     -------------------------------------
     | 2.0.2          | 1.0.x -> 1.2.x   |
@@ -31,9 +33,13 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
-###2.2.0-SNAPSHOT
+###2.2.1-SNAPSHOT
 
 * no changes yet
+
+###2.2.0
+
+* updated dependencies to latest versions
 
 ###2.1.2
 
