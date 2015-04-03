@@ -31,7 +31,11 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
-###2.1.2-SNAPSHOT
+###2.2.0-SNAPSHOT
+
+* no changes yet
+
+###2.1.2
 
 * fixed - After import, the file remained open, preventing a rename to .imported.
 * added the ability to run bash, powershell and "Windows script host"
