@@ -40,6 +40,10 @@ class BashFileProcessorListenerTest extends Specification {
                             'script_before_file' : getScript('before_file.sh'),
                             'script_after_file' : getScript('after_file.sh')
             ]
+            
+            csvFile.values().each {
+                "chmod +x $it".execute()
+            }
         }
 
         riverSettings = new RiverSettings(null, ['csv_file': csvFile])

@@ -10,7 +10,6 @@ class ProcessRunnerFactory {
         return INSTANCE 
     }
 
-    @Override
     ProcessRunner getRunner() {
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             return new WindowsProcessRunner()
