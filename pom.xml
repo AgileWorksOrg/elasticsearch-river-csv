@@ -36,7 +36,7 @@
         <java.version>1.6</java.version>
 
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <groovy.version>2.4.0</groovy.version>
+        <groovy.version>2.4.4</groovy.version>
         <groovy.eclipse.compiler.version>2.9.2-01</groovy.eclipse.compiler.version>
         <groovy-eclipse-batch.version>2.4.3-01</groovy-eclipse-batch.version>
         <spock.version>1.0-groovy-2.4</spock.version>
