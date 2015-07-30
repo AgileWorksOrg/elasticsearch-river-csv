@@ -35,9 +35,13 @@ The CSV river import data from CSV files and index it.
 
 ##Changelog
 
-###2.2.1-SNAPSHOT
+###2.2.2-SNAPSHOT
 
 * no changes yet
+
+###2.2.1
+
+* updated groovy version to support ES 1.7.x
 
 ###2.2.0
 
