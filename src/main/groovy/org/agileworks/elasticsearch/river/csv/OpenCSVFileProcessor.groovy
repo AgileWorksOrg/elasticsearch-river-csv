@@ -29,7 +29,9 @@ class OpenCSVFileProcessor implements FileProcessor {
 
         listener.onBeforeFileProcess(file)
 
+        boolean processedFirstLine
         long linesCount = 0
+        long skippedLinesCount = 0
 
         BOMInputStream bomInputStream = new BOMInputStream(new FileInputStream(file), false, AVAILABLE_BOMS)
 
@@ -40,30 +42,33 @@ class OpenCSVFileProcessor implements FileProcessor {
 
             while ((nextLine = reader.readNext()) != null) {
 
-                if (linesCount == 0 && config.firstLineIsHeader) {
+                if (!processedFirstLine && config.firstLineIsHeader) {
 
                     config.csvFields = Arrays.asList(nextLine)
+                    
+                    processedFirstLine = true
 
                 } else if (nextLine.length > 0 && !(nextLine.length == 1 && nextLine[0].trim().equals(''))) {
 
                     try {
                         processDataLine(nextLine)
+                        linesCount++
                     } catch (Exception e) {
                         listener.onErrorAndContinue(e, "Error has occured during processing file '$file.name' , skipping line: '${nextLine}' and continue in processing")
                     }
+                } else {
+                    listener.log("Skipping line as it not conform to conditions.")
+                    skippedLinesCount++
                 }
-
-                linesCount++
+                
             }
-
-        }
-        finally {
+        } finally {
             reader.close()
         }
 
         listener.onFileProcessed(file)
 
-        listener.log("File ${file.getName()}, processed lines $linesCount")
+        listener.log("File ${file.getName()}, processed lines: $linesCount, skipped lines: $skippedLinesCount")
     }
 
     private void processDataLine(String[] line) {
@@ -80,6 +85,7 @@ class OpenCSVFileProcessor implements FileProcessor {
 
             position++
         }
+        
         if (null != config.timestampField) {
             builder.field((String)config.timestampField, this.startTime)
         }
