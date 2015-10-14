@@ -1,7 +1,14 @@
 CSV River Plugin for ElasticSearch
 ==================================
 
-[![Build Status](https://travis-ci.org/AgileWorksOrg/elasticsearch-river-csv.svg?branch=master)](https://travis-ci.org/AgileWorksOrg/elasticsearch-river-csv)
+[![Build Status][Travis badge]][Travis build] [![Coverage Status][Coveralls badge]][Coveralls build] [![Dependency Status][VersionEye badge]][VersionEye build]
+[Travis badge]: https://travis-ci.org/AgileWorksOrg/elasticsearch-river-csv.svg?branch=master
+[Travis build]: https://travis-ci.org/AgileWorksOrg/elasticsearch-river-csv
+[Coveralls badge]: https://coveralls.io/repos/AgileWorksOrg/elasticsearch-river-csv/badge.svg?branch=master&service=github
+[Coveralls build]: https://coveralls.io/github/AgileWorksOrg/elasticsearch-river-csv?branch=master
+[VersionEye badge]: https://www.versioneye.com/user/projects/561eb92536d0ab00190001ab/badge.svg?style=flat
+[VersionEye build]: https://www.versioneye.com/user/projects/561eb92536d0ab00190001ab
+
 
 The CSV River plugin allows index CSV files in folder.
 
