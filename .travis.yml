@@ -6,3 +6,9 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+install:
+  - mvn clean install -Dmaven.test.skip.exec
+  - mvn test
+after_success:
+  - mvn jacoco:report
+  - mvn -N coveralls:report
