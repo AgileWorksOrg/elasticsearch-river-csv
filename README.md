@@ -1,6 +1,16 @@
 CSV River Plugin for ElasticSearch
 ==================================
 
+#Important notice
+
+As from ES version 2 and above, rivers are not supported anymore. This said we've discontinued this repo for active development and let it be only for important fixes.
+
+#New ElasticSearch CSV application
+
+We've staretd development on new standalone version of CSV uploader: https://github.com/AgileWorksOrg/elasticsearch-csv
+
+
+
 [![Build Status][Travis badge]][Travis build] [![Coverage Status][Coveralls badge]][Coveralls build] [![Dependency Status][VersionEye badge]][VersionEye build]
 [Travis badge]: https://travis-ci.org/AgileWorksOrg/elasticsearch-river-csv.svg?branch=master
 [Travis build]: https://travis-ci.org/AgileWorksOrg/elasticsearch-river-csv
